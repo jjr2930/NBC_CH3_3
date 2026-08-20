@@ -7,6 +7,3 @@ FItemSpawnRow::FItemSpawnRow()
 {
 }
 
-FItemSpawnRow::~FItemSpawnRow()
-{
-}
