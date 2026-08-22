@@ -24,9 +24,7 @@ void AFieldHealthPack::Tick(float DeltaTime)
 
 }
 
-void AFieldHealthPack::OnPicked(TObjectPtr<UStatComponent> StatComponent)
+void AFieldHealthPack::OnPicked(TObjectPtr<AActor> Who)
 {
     //StatComponent->
 }
-
-

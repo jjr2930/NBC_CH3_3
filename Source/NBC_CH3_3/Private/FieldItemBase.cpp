@@ -16,6 +16,5 @@ AFieldItemBase::AFieldItemBase()
 // Called when the game starts or when spawned
 void AFieldItemBase::BeginPlay()
 {
-	Super::BeginPlay();
-	
+	Super::BeginPlay();	
 }

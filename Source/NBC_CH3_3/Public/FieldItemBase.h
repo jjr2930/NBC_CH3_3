@@ -7,6 +7,8 @@
 class USphereComponent;
 class UStaticMesshComponent;
 class UStatComponent;
+struct FItemDataRow;
+
 UCLASS()
 class NBC_CH3_3_API AFieldItemBase : public AActor
 {
@@ -21,13 +23,15 @@ protected:
 	virtual void BeginPlay() override;
 
 public:	
-    virtual void OnPicked(TObjectPtr<UStatComponent> StatComponent) PURE_VIRTUAL(AFieldItemBase::OnPicked, );
+    virtual void OnPicked(TObjectPtr<AActor> StatComponent) PURE_VIRTUAL(AFieldItemBase::OnPicked, );
+
 protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
     TObjectPtr<USphereComponent> SphereCollision;
 
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
     TObjectPtr<UStaticMeshComponent> StaticMesh;
-	
-	
+
+    //UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
+    FItemDataRow* ItemDataRow;
 };

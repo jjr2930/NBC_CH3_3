@@ -1,17 +1,17 @@
 #pragma once
 
-#include "CoreMinimal.h"
 #include "FieldItemBase.h"
-#include "FieldHealthPack.generated.h"
+#include "CoreMinimal.h"
+#include "FieldCoin.generated.h"
 
 UCLASS()
-class NBC_CH3_3_API AFieldHealthPack : public AFieldItemBase
+class NBC_CH3_3_API AFieldCoin : public AFieldItemBase
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	AFieldHealthPack();
+	AFieldCoin();
 
 protected:
 	// Called when the game starts or when spawned
@@ -20,9 +20,7 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-    virtual void OnPicked(TObjectPtr<AActor> Who) override;
 
-protected:
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Properties")
-    int HealingAmount;
+
+    virtual void OnPicked(TObjectPtr<AActor> StatComponent) override;
 };
