@@ -1,34 +1,79 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "TpsPlayer.h"
+#include "EnhancedInputComponent.h"
+#include "TpsPlayerController.h"
+#include "JUtility.h"
+#include "GameFramework/PawnMovementComponent.h"
 
-// Sets default values
 ATpsPlayer::ATpsPlayer()
 {
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
 }
 
-// Called when the game starts or when spawned
 void ATpsPlayer::BeginPlay()
 {
 	Super::BeginPlay();
 	
 }
 
-// Called every frame
 void ATpsPlayer::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
 }
 
-// Called to bind functionality to input
 void ATpsPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+    UEnhancedInputComponent* EnhancedInput
+        = Cast<UEnhancedInputComponent>(PlayerInputComponent);
+    
+    if (nullptr != EnhancedInput)
+    {
+        JUtility::Error(TEXT("Enhanced inputu is nullptr"));
+        return;
+    }
+
+    ATpsPlayerController* TpsController 
+        = Cast<ATpsPlayerController>(GetController());
+    if (nullptr != TpsController)
+    {
+        JUtility::Error(TEXT("TpsPlayerController casting failed"));
+        return;
+    }
+ 
+    EnhancedInput->BindAction(
+        TpsController->GetMoveAction(),
+        ETriggerEvent::Triggered,
+        this,
+        &ATpsPlayer::OnMoveAction
+    );
+
+    EnhancedInput->BindAction(
+        TpsController->GetLookAction(),
+        ETriggerEvent::Triggered,
+        this,
+        &ATpsPlayer::OnLookAction
+    );
 }
 
+void ATpsPlayer::OnMoveAction(const FInputActionInstance& Value)
+{
+    FVector2D MovingInput = Value.GetValue().Get<FVector2D>();
+
+    FVector Direction = (GetActorForwardVector()) * MovingInput.Y;
+    Direction += (GetActorRightVector()) * MovingInput.X;
+    Direction.Normalize();
+
+    AddMovementInput(Direction);
+}
+
+void ATpsPlayer::OnLookAction(const FInputActionInstance& Value)
+{
+    FVector2D LookingInput = Value.GetValue().Get<FVector2D>();
+
+    LookingInput.Y = (InversLookY) ? -LookingInput.Y : LookingInput.Y;
+
+    AddControllerPitchInput(LookingInput.Y);
+    AddControllerYawInput(LookingInput.X);
+}

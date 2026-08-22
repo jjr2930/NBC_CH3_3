@@ -17,15 +17,16 @@ class NBC_CH3_3_API ATpsPlayerController : public APlayerController
 {
 	GENERATED_BODY()
 
+public:
+    TObjectPtr<UInputAction> GetMoveAction();
+    TObjectPtr<UInputAction> GetLookAction();
+
 protected:
     virtual void BeginPlay() override;
     virtual void SetupInputComponent() override;
 
-    void Move(const FInputActionInstance& Value);
-    void Look(const FInputActionInstance& Value);
 protected:
     TObjectPtr<UInputMappingContext> DefaultMappingContext;
     TObjectPtr<UInputAction> MoveAction;
     TObjectPtr<UInputAction> LookAction;
-
 };

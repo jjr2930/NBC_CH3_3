@@ -1,4 +1,5 @@
 #include "TpsPlayerController.h"
+#include "JUtility.h"
 
 void ATpsPlayerController::BeginPlay()
 {
@@ -7,7 +8,7 @@ void ATpsPlayerController::BeginPlay()
     ULocalPlayer* LocalPlayer = GetLocalPlayer();
     if (!LocalPlayer)
     {
-        GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, FString(TEXT("Local Player is null")));
+        JUtility::Error(FString(TEXT("Local Player is null")));
         return;
     }
     
@@ -15,7 +16,7 @@ void ATpsPlayerController::BeginPlay()
         = LocalPlayer->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>();
     if (!InputSystem)
     {
-        GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, FString(TEXT("InputSystem is null")));
+        JUtility::Error(FString(TEXT("Subsystem is nullptr")));
         return;
     }
 
@@ -25,10 +26,21 @@ void ATpsPlayerController::BeginPlay()
 void ATpsPlayerController::SetupInputComponent()
 {
     Super::SetupInputComponent();
-
-    if (UEnhancedInputComponent* EnhancedInput 
-        = Cast<UEnhancedInputComponent>(InputComponent))
+    UEnhancedInputComponent* EnhancedInput = Cast<UEnhancedInputComponent>(InputComponent);
+    
+    if (nullptr == EnhancedInput)
     {
-        Enahce
+        JUtility::Error(FString(TEXT("Input component is not UEnhancedInputComponent")));
+        return;
     }
+}
+
+TObjectPtr<UInputAction> ATpsPlayerController::GetMoveAction()
+{
+    return MoveAction;
+}
+
+TObjectPtr<UInputAction> ATpsPlayerController::GetLookAction()
+{
+    return LookAction;
 }
