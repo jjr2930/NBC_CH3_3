@@ -1,7 +1,7 @@
 #include "InventoryComponent.h"
 #include "ItemDataRow.h"
 #include "Engine/Engine.h"
-
+#include "JUtility.h"
 
 // Sets default values for this component's properties
 UInventoryComponent::UInventoryComponent()
@@ -34,6 +34,12 @@ void UInventoryComponent::TickComponent(float DeltaTime, ELevelTick TickType, FA
 
 void UInventoryComponent::AddItem(int TableKey, int amount)
 {
+    if (!IsValid(ItemTable))
+    {
+        JError("Item table is not valid");
+        return;
+    }
+
     int FoundIndex = -1;
     TArray<FItemDataRow*> AllRows;
     ItemTable->GetAllRows(FString("Inventory"), AllRows);
@@ -47,7 +53,7 @@ void UInventoryComponent::AddItem(int TableKey, int amount)
     for (auto iter : AllRows)
     {
         //like gear...
-        if (!iter->IsStackable)
+        if(iter->Key == TableKey && !iter->IsStackable)
         {
             Items.Add({ TableKey, amount });
             return;
@@ -84,14 +90,18 @@ void UInventoryComponent::RemoveItem(int TableKey, int amount)
 
 bool UInventoryComponent::TryGetItem(int TableKey, int* OutFoundIndex)
 {
-    for (auto Item : Items)
+    int32 Size = Items.Num();
+    for (int i = 0; i < Size; ++i) 
     {
-        if (Item.TableKey == TableKey)
+        if (Items[i].TableKey == TableKey)
         {
+            *OutFoundIndex = i;
             return true;
         }
     }
 
+    
+    *OutFoundIndex = -1;
     return false;
 }
 

@@ -6,7 +6,9 @@
 
 class UStatComponent;
 class UInventoryComponent;
-class FInputActionInstance;
+class USpringArmComponent;
+class UCameraComponent;
+struct FInputActionInstance;
 
 UCLASS()
 class NBC_CH3_3_API ATpsPlayer : public ACharacter
@@ -28,12 +30,29 @@ public:
     void OnMoveAction(const FInputActionInstance& Value);
     void OnLookAction(const FInputActionInstance& Value);
 
+    UFUNCTION()
+    void OnComponentBeginOverlap(
+        UPrimitiveComponent* OverlappedComponent,
+        AActor* OtherActor,
+        UPrimitiveComponent* OtherComp,
+        int32 OtherBodyIndex,
+        bool bFromSweep,
+        const FHitResult& SweepResult
+    );
+    
+    
 protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "TpsPlayer|Components")
     TObjectPtr<UStatComponent> PlayerStat;
 
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "TpsPlayer|Components")
     TObjectPtr<UInventoryComponent> Inventory;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "TpsPlayer|Components")
+    TObjectPtr<USpringArmComponent> SpringArm;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "TpsPlayer|Components")
+    TObjectPtr<UCameraComponent> Camera;
 
 
     ///////////////////////////////////////////////////////

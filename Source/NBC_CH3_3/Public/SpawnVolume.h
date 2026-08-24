@@ -17,10 +17,17 @@ public:
 	ASpawnVolume();
     FVector GetRandomPositionInVolume();
 
+    virtual void Tick(float DeltaTime) override;
+
     UFUNCTION()
-    virtual TWeakObjectPtr<AActor> Spawn() PURE_VIRTUAL(ASpawnVolume::Spawn, return nullptr; );
+    virtual AActor* Spawn() PURE_VIRTUAL(ASpawnVolume::Spawn, return nullptr; );
     
 protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Spawn Volume| Components")
     TObjectPtr<UBoxComponent> BoxVolume;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawn Volume|Properties")
+    float SpawnDelay;
+
+    float LastSpawnTime;
 };

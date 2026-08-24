@@ -3,9 +3,26 @@
 #include "TpsPlayerController.h"
 #include "JUtility.h"
 #include "GameFramework/PawnMovementComponent.h"
+#include "InventoryComponent.h"
+#include "GameFramework/SpringArmComponent.h"
+#include "StatComponent.h"
+#include "GameFramework/Character.h"
+#include "Components/CapsuleComponent.h"
+#include <Camera/CameraComponent.h>
+#include "FieldItemBase.h"
 
 ATpsPlayer::ATpsPlayer()
 {
+    PlayerStat = CreateDefaultSubobject<UStatComponent>(TEXT("Stat"));
+    Inventory = CreateDefaultSubobject<UInventoryComponent>(TEXT("Inventory"));
+    SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("Spring Arm"));
+    Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
+
+    SpringArm->SetupAttachment(GetCapsuleComponent());
+    Camera->SetupAttachment(SpringArm);
+
+    GetCapsuleComponent()->OnComponentBeginOverlap.AddDynamic(this, &ATpsPlayer::OnComponentBeginOverlap);
+
 	PrimaryActorTick.bCanEverTick = true;
 }
 
@@ -28,17 +45,17 @@ void ATpsPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent
     UEnhancedInputComponent* EnhancedInput
         = Cast<UEnhancedInputComponent>(PlayerInputComponent);
     
-    if (nullptr != EnhancedInput)
+    if (!IsValid(EnhancedInput))
     {
-        JUtility::Error(TEXT("Enhanced inputu is nullptr"));
+        JError("Enhanced inputu is nullptr");
         return;
     }
 
     ATpsPlayerController* TpsController 
         = Cast<ATpsPlayerController>(GetController());
-    if (nullptr != TpsController)
+    if (!IsValid( TpsController))
     {
-        JUtility::Error(TEXT("TpsPlayerController casting failed"));
+        JError("TpsPlayerController casting failed");
         return;
     }
  
@@ -76,4 +93,21 @@ void ATpsPlayer::OnLookAction(const FInputActionInstance& Value)
 
     AddControllerPitchInput(LookingInput.Y);
     AddControllerYawInput(LookingInput.X);
+}
+
+void ATpsPlayer::OnComponentBeginOverlap(UPrimitiveComponent* OverlappedComponent
+    , AActor* OtherActor
+    , UPrimitiveComponent* OtherComp
+    , int32 OtherBodyIndex
+    , bool bFromSweep
+    , const FHitResult& SweepResult)
+{
+    AFieldItemBase* FieldItem = Cast<AFieldItemBase>(OtherActor);
+    if (!IsValid(FieldItem))
+    {
+        JError("%s is not FieldItme", *OtherActor->GetName());
+        return;
+    }
+
+    FieldItem->OnPicked(this);
 }

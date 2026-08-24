@@ -1,6 +1,6 @@
 #include "FieldHealthPack.h"
 #include "StatComponent.h"
-
+#include "JUtility.h"
 
 // Sets default values
 AFieldHealthPack::AFieldHealthPack()
@@ -26,5 +26,19 @@ void AFieldHealthPack::Tick(float DeltaTime)
 
 void AFieldHealthPack::OnPicked(TObjectPtr<AActor> Who)
 {
-    //StatComponent->
+    UStatComponent* StatComponent = Who->GetComponentByClass<UStatComponent>();
+    if (!IsValid(StatComponent))
+    {
+        JError("%s Does not have stat component", *Who->GetName());
+        return;
+    }
+
+    int CurrentHealth = StatComponent->GetInt(ECharacterStatType::Health, 0);
+    int MaxHealth = StatComponent->GetInt(ECharacterStatType::MaxHealth, 100);
+
+    CurrentHealth += HealingAmount;
+    if (CurrentHealth > MaxHealth)
+        CurrentHealth = MaxHealth;
+
+    StatComponent->SetOrAdd(ECharacterStatType::Health, CurrentHealth);
 }

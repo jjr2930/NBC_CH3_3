@@ -2,16 +2,20 @@
 
 #include "CoreMinimal.h"
 
-class JUtility
-{
-public:
-    JUtility();
-	~JUtility();
+#define JLog(Format, ...) \
+UE_LOG(LogTemp, Log, TEXT(Format), ##__VA_ARGS__); \
+if(GEngine) { \
+    GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::White, FString::Printf(TEXT(Format), ##__VA_ARGS__)); \
+}
 
-    static void Log(FString Format, ...);
-    static void Warning(FString Format, ...);
-    static void Error(FString Format, ...);
+#define JWarning(Format, ...) \
+UE_LOG(LogTemp, Log, TEXT(Format), ##__VA_ARGS__); \
+if(GEngine) { \
+    GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Yellow, FString::Printf(TEXT(Format), ##__VA_ARGS__)); \
+}
 
-protected:
-    static void Print(FString Format , FColor Color, ...);
-};
+#define JError(Format, ...) \
+UE_LOG(LogTemp, Log, TEXT(Format), ##__VA_ARGS__); \
+if(GEngine) { \
+    GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Red, FString::Printf(TEXT(Format), ##__VA_ARGS__)); \
+}

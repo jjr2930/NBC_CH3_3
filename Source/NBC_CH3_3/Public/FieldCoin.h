@@ -12,7 +12,7 @@ class NBC_CH3_3_API AFieldCoin : public AFieldItemBase
 public:	
 	// Sets default values for this actor's properties
 	AFieldCoin();
-
+    
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -22,5 +22,5 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 
-    virtual void OnPicked(TObjectPtr<AActor> StatComponent) override;
+    virtual void OnPicked(TObjectPtr<AActor> Who) override;
 };

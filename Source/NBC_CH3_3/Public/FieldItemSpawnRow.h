@@ -13,13 +13,20 @@ struct NBC_CH3_3_API  FFieldItemSpawnRow : public FTableRowBase
 
 public:
     FFieldItemSpawnRow();
+    int RollAmount();
 
-protected:
+public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ItemSpawnRow|Properties")
-    FName ItemName;
+    int ItemTableKey;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ItemSpawnRow|Properties")
-    TSubclassOf<AFieldItemBase> ItemClass;
+    TSubclassOf<AFieldItemBase> FieldItemActorClass;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ItemDataRow")
+    int AmountMin;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ItemDataRow")
+    int AmountMax;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ItemSpawnRow|Properties")
     float DropRate;

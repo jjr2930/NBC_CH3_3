@@ -18,3 +18,14 @@ FVector ASpawnVolume::GetRandomPositionInVolume()
 
     return RandomWorldPosition;
 }
+
+
+void ASpawnVolume::Tick(float DeltaTime)
+{
+    double Now = (float)(GetWorld()->GetTimeSeconds());
+    if (Now - LastSpawnTime >= SpawnDelay)
+    {
+        Spawn();
+        LastSpawnTime = Now;
+    }
+}

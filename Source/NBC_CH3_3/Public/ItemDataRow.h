@@ -14,8 +14,10 @@ public:
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="ItemDataRow")
     int Key;
+
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ItemDataRow")
     FName Name;
+
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ItemDataRow")
     bool IsStackable;
 };

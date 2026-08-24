@@ -1,5 +1,9 @@
 #include "FieldCoin.h"
 #include "StatComponent.h"
+#include "InventoryComponent.h"
+#include "JUtility.h"
+#include "ItemDataRow.h"
+#include "FieldItemSpawnRow.h"
 
 AFieldCoin::AFieldCoin()
 {
@@ -19,6 +23,16 @@ void AFieldCoin::Tick(float DeltaTime)
 
 }
 
-void AFieldCoin::OnPicked(TObjectPtr<AActor> StatComponent)
+void AFieldCoin::OnPicked(TObjectPtr<AActor> Who)
 {
+    UInventoryComponent* Inventory = Who->GetComponentByClass<UInventoryComponent>();
+    if (!IsValid(Inventory))
+    {
+        JError("%s Does not have InventoryComponent", *Who->GetName());
+        return;
+    }
+
+    Inventory->AddItem(Row->ItemTableKey, Row->RollAmount());
+
+    Destroy();
 }

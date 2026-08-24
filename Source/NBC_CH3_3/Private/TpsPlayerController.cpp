@@ -1,5 +1,9 @@
 #include "TpsPlayerController.h"
 #include "JUtility.h"
+#include <EnhancedInputComponent.h>
+#include <EnhancedInputSubsystems.h>
+#include <InputMappingContext.h>
+#include <InputAction.h>
 
 void ATpsPlayerController::BeginPlay()
 {
@@ -7,8 +11,8 @@ void ATpsPlayerController::BeginPlay()
 
     ULocalPlayer* LocalPlayer = GetLocalPlayer();
     if (!LocalPlayer)
-    {
-        JUtility::Error(FString(TEXT("Local Player is null")));
+    {   
+        JError("There is no local plyaer");
         return;
     }
     
@@ -16,7 +20,13 @@ void ATpsPlayerController::BeginPlay()
         = LocalPlayer->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>();
     if (!InputSystem)
     {
-        JUtility::Error(FString(TEXT("Subsystem is nullptr")));
+        JError("there is no enhnaced input system");
+        return;
+    }
+
+    if (!IsValid(DefaultMappingContext))
+    {
+        JError("Context is Invalid");
         return;
     }
 
@@ -30,7 +40,7 @@ void ATpsPlayerController::SetupInputComponent()
     
     if (nullptr == EnhancedInput)
     {
-        JUtility::Error(FString(TEXT("Input component is not UEnhancedInputComponent")));
+        JError("EnahcnedInput casting failed");
         return;
     }
 }
