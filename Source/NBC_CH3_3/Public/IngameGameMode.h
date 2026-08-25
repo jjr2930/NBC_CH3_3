@@ -5,6 +5,7 @@
 #include "IngameGameMode.generated.h"
 
 class AFieldItemBase;
+class AIngameState;
 
 UCLASS()
 class NBC_CH3_3_API AIngameGameMode : public AGameModeBase
@@ -12,21 +13,18 @@ class NBC_CH3_3_API AIngameGameMode : public AGameModeBase
 	GENERATED_BODY()
     
 public:
+    AIngameGameMode();
     void PickupFieldItem(const AFieldItemBase& item);
+    
+    virtual void BeginPlay() override;
+    virtual void Tick(float DeltaTime) override;
 
 protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GameMode|Properties")
-    int TargetPickupCount;
-    
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GameMode|Properties")
-    int CurrentPickupCount;
-    
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GameMode|Properties")
-    int TotalWaveCount;
-    
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GameMode|Properties")
-    int CurrentWave;
-
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GameMode|Properties")
     TSoftObjectPtr<UWorld> NextStage;    
+    
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GameMode|Properties")
+    TSoftObjectPtr<UWorld> FailedLevel;
+    
+    AIngameState* IngameState;
 };

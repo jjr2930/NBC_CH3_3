@@ -1,16 +1,40 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "IngameState.h"
 
-void AIngameState::SetCurrentPickUpCount(int Value)
+
+void AIngameState::SetCurrentPickUpCount(int InValue)
 {
-    this->CurrentPickUpCount = Value;
+    this->CurrentPickUpCount = InValue;
+
+    OnPickupCountChanged.Broadcast(CurrentPickUpCount, TotalPickupCount);
 }
 
-void AIngameState::SetTotalPickUpCount(int Value)
+void AIngameState::SetTotalPickUpCount(int InValue)
 {
-    this->TotalPickupCount = Value; 
+    TotalPickupCount = InValue;
+
+    OnPickupCountChanged.Broadcast(CurrentPickUpCount, TotalPickupCount);
+}
+
+void AIngameState::SetCurrentWaveIndex(int InValue)
+{
+    CurrentWaveIndex = InValue;
+}
+
+void AIngameState::SetTotalWaveCount(int InValue)
+{
+    TotalWaveCount = InValue;
+}
+
+void AIngameState::SetStartTime(float InValue)
+{
+    StartTime = InValue;
+}
+
+void AIngameState::SetRemainTime(float InValue)
+{
+    RemainTime = InValue;
+
+    OnRemainTimeChanged.Broadcast(RemainTime);
 }
 
 int AIngameState::GetCurrentPickUpCount() const
@@ -21,4 +45,29 @@ int AIngameState::GetCurrentPickUpCount() const
 int AIngameState::GetTotalPickUpCount() const
 {
     return TotalPickupCount;
+}
+
+int AIngameState::GetCurrentWaveIndex() const
+{
+    return CurrentWaveIndex;
+}
+
+int AIngameState::GetTotalWaveCount() const
+{
+    return TotalWaveCount;
+}
+
+float AIngameState::GetStartTime() const
+{
+    return StartTime;
+}
+
+float AIngameState::GetWaveDuration() const
+{
+    return WaveDuration;
+}
+
+float AIngameState::GetRemainTime() const
+{
+    return RemainTime;
 }

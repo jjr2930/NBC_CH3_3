@@ -2,8 +2,6 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
-#include "EnhancedInputComponent.h"
-#include "EnhancedInputSubsystems.h"
 
 #include "TpsPlayerController.generated.h"
 
@@ -11,6 +9,7 @@ class InputMappingContext;
 struct FInputActionInstance;
 class UInputAction;
 class UInputMappingContext;
+class UIngameWidget;
 
 UCLASS()
 class NBC_CH3_3_API ATpsPlayerController : public APlayerController
@@ -34,4 +33,7 @@ protected:
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TpsPlayerController|Input")
     TObjectPtr<UInputAction> LookAction;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TpsPlayerController|UI")
+    TSubclassOf<UIngameWidget> IngameWidget;
 };

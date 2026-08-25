@@ -1,9 +1,13 @@
 #include "TpsPlayerController.h"
 #include "JUtility.h"
+#include "Blueprint/UserWidget.h"
+#include "IngameWidget.h"
+
 #include <EnhancedInputComponent.h>
 #include <EnhancedInputSubsystems.h>
 #include <InputMappingContext.h>
 #include <InputAction.h>
+
 
 void ATpsPlayerController::BeginPlay()
 {
@@ -31,6 +35,19 @@ void ATpsPlayerController::BeginPlay()
     }
 
     InputSystem->AddMappingContext(DefaultMappingContext, 0);
+
+    if (!IngameWidget)
+    {
+        JError("Widget is invalid");
+        return;
+    }
+
+    TObjectPtr<UIngameWidget> WidgetInstance = CreateWidget<UIngameWidget>(GetWorld(), IngameWidget);
+    WidgetInstance->AddToViewport(0);
+
+    FInputModeGameOnly GameOnly;
+    SetInputMode(GameOnly);
+    SetShowMouseCursor(false);
 }
 
 void ATpsPlayerController::SetupInputComponent()

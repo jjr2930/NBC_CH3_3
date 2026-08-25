@@ -3,29 +3,67 @@
 #include "JUtility.h"
 #include "FieldItemBase.h"
 #include "Kismet/GameplayStatics.h"
+#include "IngameState.h"
+
+AIngameGameMode::AIngameGameMode()
+{
+    GameStateClass = AIngameState::StaticClass();
+
+    PrimaryActorTick.bCanEverTick = true;
+}
 
 void AIngameGameMode::PickupFieldItem(const AFieldItemBase& Item)
 {
-    if (!IsValid(&Item))
-    {
-        JError("Argument is not field item");
-        return;
-    }
+    checkf(IsValid(&Item), TEXT("Item is not valiud"));
+    checkf(IsValid(IngameState), TEXT("Current game state is not IngameState"));
 
-    CurrentPickupCount++;
-    if (CurrentPickupCount >= TargetPickupCount)
+    int CurrentPickupCount = IngameState->GetCurrentPickUpCount();
+    IngameState->SetCurrentPickUpCount(++CurrentPickupCount);
+
+    int TotalPickupCount = IngameState->GetTotalPickUpCount();
+    if (CurrentPickupCount < TotalPickupCount)
+        return;
+    
+    int CurrentWaveIndex = IngameState->GetCurrentWaveIndex();
+    JLog("%d Wave cleared", CurrentWaveIndex);
+
+    int TotalWaveCount = IngameState->GetTotalWaveCount();
+    if (CurrentWaveIndex == TotalWaveCount - 1) //인덱스는 0부터 시작하니까...
     {
-        //set next wawve
-        JLog("%d Wave Finished", CurrentWave);
-        if (CurrentWave >= TotalWaveCount)
-        {
-            JLog("Current stage cleared!, ready for next stage!");
-            UGameplayStatics::OpenLevelBySoftObjectPtr(this, NextStage);
-        }
-        else
-        {
-            CurrentWave++;
-            JLog("%d Wave started", CurrentWave);
-        }
+        JLog("StageCleared, load next stage");
+        UGameplayStatics::OpenLevelBySoftObjectPtr(GetWorld(), NextStage);
+    }
+    else
+    {
+        IngameState->SetCurrentWaveIndex(CurrentWaveIndex + 1);
+        JLog("Good, you cleared this wave, ready for next wave");
+
+        IngameState->SetCurrentPickUpCount(0);
+    }
+}
+
+void AIngameGameMode::BeginPlay()
+{
+    IngameState = Cast<AIngameState>(GetWorld()->GetGameState());
+    checkf(IsValid(IngameState), TEXT("Current game state is not IngameState"));
+
+    IngameState->SetStartTime((float)GetWorld()->TimeSeconds);
+}
+
+void AIngameGameMode::Tick(float DeltaTime)
+{
+    float StartTime = IngameState->GetStartTime();
+    float NowTime = (float)GetWorld()->TimeSeconds;
+    float WaveDuration = IngameState->GetWaveDuration();
+    float RemainTime = WaveDuration - (NowTime - StartTime);
+
+    IngameState->SetRemainTime(RemainTime);
+
+    if (RemainTime <= 0.0f)
+    {
+        JLog("Time Over");
+
+        checkf(!FailedLevel.IsNull(), TEXT("Failed level is invalid"));
+        UGameplayStatics::OpenLevelBySoftObjectPtr(GetWorld(), FailedLevel);
     }
 }
