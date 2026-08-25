@@ -26,7 +26,7 @@ protected:
     virtual void SetupInputComponent() override;
 
 protected:
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="TpsPlayerController|Input")
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TpsPlayerController|Input")
     TObjectPtr<UInputMappingContext> DefaultMappingContext;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TpsPlayerController|Input")
