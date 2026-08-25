@@ -19,8 +19,18 @@ void UIngameWidget::SetPickupCount(int InPickupCount, int InTargetItemCount)
         , InTargetItemCount
     );
 
-    this->PickupCount->SetText(TextToDisplay);
-    this->PickupCountProgressbar->SetPercent((float)InPickupCount / (float)InTargetItemCount);
+    PickupCount->SetText(TextToDisplay);
+    PickupCountProgressbar->SetPercent((float)InPickupCount / (float)InTargetItemCount);
+}
+void UIngameWidget::SetWaveText(int InCurrentWaveIndex, int InTotalWaveCount)
+{
+    FText TextToDisplay = FText::Format(
+        FText::FromString(TEXT("{0}/{1}"))
+        , InCurrentWaveIndex + 1    //인덱스는 0부터 시작한다.
+        , InTotalWaveCount
+    );
+
+    WaveText->SetText(TextToDisplay);
 }
 
 void UIngameWidget::NativeOnInitialized()
@@ -30,10 +40,14 @@ void UIngameWidget::NativeOnInitialized()
 
     IngameState->OnPickupCountChanged.AddUObject(this, &UIngameWidget::SetPickupCount);
     IngameState->OnRemainTimeChanged.AddUObject(this, &UIngameWidget::SetWaveDuration);
+    IngameState->OnWaveIndexChanged.AddUObject(this, &UIngameWidget::SetWaveText);
 
     //처음엔 얻어와서 세팅하자.
     int CurrentPickupCount = IngameState->GetCurrentPickUpCount();
     int TotalPickupCount = IngameState->GetTotalPickUpCount();
+    int CurrentWaveIndex = IngameState->GetCurrentWaveIndex();
+    int TotalWaveCount = IngameState->GetTotalWaveCount();
 
     SetPickupCount(CurrentPickupCount, TotalPickupCount);
+    SetWaveText(CurrentWaveIndex, TotalWaveCount);
 }

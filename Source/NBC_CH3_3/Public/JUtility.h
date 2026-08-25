@@ -19,3 +19,4 @@ UE_LOG(LogTemp, Log, TEXT(Format), ##__VA_ARGS__); \
 if(GEngine) { \
     GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Red, FString::Printf(TEXT(Format), ##__VA_ARGS__)); \
 }
+ 

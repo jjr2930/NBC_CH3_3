@@ -1,4 +1,4 @@
-#include "IngameState.h"
+﻿#include "IngameState.h"
 
 
 void AIngameState::SetCurrentPickUpCount(int InValue)
@@ -11,18 +11,22 @@ void AIngameState::SetCurrentPickUpCount(int InValue)
 void AIngameState::SetTotalPickUpCount(int InValue)
 {
     TotalPickupCount = InValue;
-
+      
     OnPickupCountChanged.Broadcast(CurrentPickUpCount, TotalPickupCount);
 }
 
 void AIngameState::SetCurrentWaveIndex(int InValue)
 {
-    CurrentWaveIndex = InValue;
+    CurrentWaveIndex = InValue; 
+
+    OnWaveIndexChanged.Broadcast(CurrentWaveIndex, TotalWaveCount);
 }
 
 void AIngameState::SetTotalWaveCount(int InValue)
 {
     TotalWaveCount = InValue;
+
+    OnWaveIndexChanged.Broadcast(CurrentWaveIndex, TotalWaveCount);
 }
 
 void AIngameState::SetStartTime(float InValue)

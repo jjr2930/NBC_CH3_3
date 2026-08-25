@@ -16,7 +16,8 @@ class NBC_CH3_3_API UIngameWidget : public UUserWidget
 
 public:
     void SetWaveDuration(float InRemainTime);
-    void SetPickupCount(int InPickupItemCount, int INTargetItemCount);
+    void SetPickupCount(int InPickupItemCount, int InTargetItemCount);
+    void SetWaveText(int InCurrentWaveIndex, int InTotalWaveCount);
 
 protected:
     virtual void NativeOnInitialized() override;
@@ -30,4 +31,7 @@ protected:
 
     UPROPERTY(meta = (BindWidget))
     TObjectPtr<UTextBlock> PickupCount;
+
+    UPROPERTY(meta = (BindWidget))
+    TObjectPtr<UTextBlock> WaveText;
 };

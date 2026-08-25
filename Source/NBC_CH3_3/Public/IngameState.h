@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameStateBase.h"
@@ -10,14 +10,14 @@ class NBC_CH3_3_API AIngameState : public AGameStateBase
 	GENERATED_BODY()
 
 public:
-    void SetCurrentPickUpCount(int PickupCount);
+    void SetCurrentPickUpCount(int PickupCount   );
     void SetTotalPickUpCount(int Count);
     void SetCurrentWaveIndex(int Value);
     void SetTotalWaveCount(int Value);
     void SetStartTime(float Value);
     void SetRemainTime(float Value);
 
-    int GetCurrentPickUpCount() const;
+    int GetCurrentPickUpCount() const; 
     int GetTotalPickUpCount() const;
     int GetCurrentWaveIndex() const;
     int GetTotalWaveCount() const;
@@ -29,27 +29,22 @@ public:
         FOnRemainingTimeChanged,
         float
     );
-
+     
     DECLARE_MULTICAST_DELEGATE_TwoParams(
         FOnPickupCountChanged
         , int   //PickupCount
         , int   //totalCount
     );
 
-    DECLARE_MULTICAST_DELEGATE_OneParam(
+    DECLARE_MULTICAST_DELEGATE_TwoParams(
         FOnCurrentWaveIndexChanged
-        , int   //PickupCount
-    );
-
-    DECLARE_MULTICAST_DELEGATE_OneParam(
-        FOnTotalWaveCountChanged
-        , int   //PickupCount
+        , int   //current wave index
+        , int   // totla wave count
     );
 
     FOnRemainingTimeChanged OnRemainTimeChanged;
     FOnPickupCountChanged OnPickupCountChanged;
     FOnCurrentWaveIndexChanged OnWaveIndexChanged;
-    FOnTotalWaveCountChanged OnTotalWaveCountChanged;
 
 protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "IngameState|Properties")

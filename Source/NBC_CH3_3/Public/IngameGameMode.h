@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
@@ -15,7 +15,8 @@ class NBC_CH3_3_API AIngameGameMode : public AGameModeBase
 public:
     AIngameGameMode();
     void PickupFieldItem(const AFieldItemBase& item);
-    
+    void SetNextWave();
+
     virtual void BeginPlay() override;
     virtual void Tick(float DeltaTime) override;
 

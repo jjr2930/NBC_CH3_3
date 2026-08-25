@@ -2,6 +2,7 @@
 #include "FieldItemSpawnRow.h"
 #include "JUtility.h"
 #include "FieldItemBase.h"
+#include "Kismet/GameplayStatics.h"
 
 AFieldItemSpawnVolume::AFieldItemSpawnVolume()
 {
@@ -50,16 +51,17 @@ AActor* AFieldItemSpawnVolume::Spawn()
     }
 
     FVector RandomPosition = GetRandomPositionInVolume();
-    AActor* SpawnedActor = GetWorld()->SpawnActor(FoundFieldItemClass, &RandomPosition);
+    FRotator SpawnRotator(0.0, 0.0, 0.0);
+    FTransform SpawnTransform(SpawnRotator, RandomPosition, FVector::One());
+    AFieldItemBase* SpawnedActor 
+        = GetWorld()->SpawnActorDeferred<AFieldItemBase>(FoundFieldItemClass, SpawnTransform);
 
-    AFieldItemBase* FieldItemBase = Cast<AFieldItemBase>(SpawnedActor);
-    if (!IsValid(FieldItemBase))
-    {
-        JError("Spawned actor is not field itembase");
-        return nullptr;
-    }
+    checkf(IsValid(SpawnedActor), TEXT("AFieldItemBase is nullptr"));
 
-    FieldItemBase->SetData(FoundRow);
+    SpawnedActor->SetData(FoundRow);
+    AActor* Temp = UGameplayStatics::FinishSpawningActor(SpawnedActor, SpawnTransform);
+    SpawnedActor = Cast<AFieldItemBase>(Temp);
+    checkf(IsValid(SpawnedActor), TEXT("%s is not FieldItembase"), *Temp->GetName());
 
     return SpawnedActor;
 }

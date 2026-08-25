@@ -26,7 +26,7 @@ void AIngameGameMode::PickupFieldItem(const AFieldItemBase& Item)
         return;
     
     int CurrentWaveIndex = IngameState->GetCurrentWaveIndex();
-    JLog("%d Wave cleared", CurrentWaveIndex + 1);
+    JLog("%d Wave cleared", CurrentWaveIndex);
 
     int TotalWaveCount = IngameState->GetTotalWaveCount();
     if (CurrentWaveIndex == TotalWaveCount - 1) //인덱스는 0부터 시작하니까...
@@ -44,6 +44,7 @@ void AIngameGameMode::SetNextWave()
 {
     int CurrentWaveIndex = IngameState->GetCurrentWaveIndex();
     IngameState->SetCurrentWaveIndex(++CurrentWaveIndex );
+    JLog("Good, you cleared this wave, ready for next wave");
     JLog("%d 웨이브 시작!", CurrentWaveIndex + 1);
 
     IngameState->SetStartTime(GetWorld()->TimeSeconds);
