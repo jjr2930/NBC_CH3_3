@@ -1,10 +1,10 @@
-#pragma once
+﻿#pragma once
 
 #include "Engine/DataTable.h"
 #include "CoreMinimal.h"
 #include "FieldItemSpawnRow.generated.h"
 
-class AFieldItemBase;
+class AFieldItem;
 
 USTRUCT(BlueprintType)
 struct NBC_CH3_3_API  FFieldItemSpawnRow : public FTableRowBase
@@ -20,7 +20,7 @@ public:
     int ItemTableKey;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ItemSpawnRow|Properties")
-    TSubclassOf<AFieldItemBase> FieldItemActorClass;
+    TSubclassOf<AFieldItem> FieldItemActorClass;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ItemDataRow")
     int AmountMin;

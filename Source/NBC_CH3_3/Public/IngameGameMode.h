@@ -4,7 +4,7 @@
 #include "GameFramework/GameModeBase.h"
 #include "IngameGameMode.generated.h"
 
-class AFieldItemBase;
+class AFieldItem;
 class AIngameState;
 
 UCLASS()
@@ -14,7 +14,7 @@ class NBC_CH3_3_API AIngameGameMode : public AGameModeBase
     
 public:
     AIngameGameMode();
-    void PickupFieldItem(const AFieldItemBase& item);
+    void PickupFieldItem(const AFieldItem& item);
     void SetNextWave();
 
     virtual void BeginPlay() override;

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
@@ -66,5 +66,14 @@ protected:
     
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TpsPlayer|Properties")
     bool InversLookY;
+
+
+    ///////////////////////////////////////////////////////
+    //  Widgets
+    ///////////////////////////////////////////////////////
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TpsPlayer|Widgets")
+    TObjectPtr<UUserWidget> GatchaWidget;
+
+    TObjectPtr<UUserWidget> GatchaWidgetInstance;
 };
 

@@ -1,15 +1,16 @@
-#include "TpsPlayer.h"
+﻿#include "TpsPlayer.h"
 #include "EnhancedInputComponent.h"
 #include "TpsPlayerController.h"
 #include "JUtility.h"
 #include "GameFramework/PawnMovementComponent.h"
 #include "InventoryComponent.h"
-#include "GameFramework/SpringArmComponent.h"
 #include "StatComponent.h"
 #include "GameFramework/Character.h"
+#include "FieldItem.h"
+#include "GameFramework/SpringArmComponent.h"
 #include "Components/CapsuleComponent.h"
 #include <Camera/CameraComponent.h>
-#include "FieldItemBase.h"
+#include <Blueprint/UserWidget.h>
 
 ATpsPlayer::ATpsPlayer()
 {
@@ -29,7 +30,12 @@ ATpsPlayer::ATpsPlayer()
 void ATpsPlayer::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+    checkf(IsValid(GatchaWidget), TEXT("GatchaWidget is invalid"));
+
+    GatchaWidgetInstance = CreateWidget<UUserWidget>(GatchaWidget);
+    GatchaWidget->AddToViewport(1);
+    GatchaWidget->SetVisibility(ESlateVisibility::Hidden);	
 }
 
 void ATpsPlayer::Tick(float DeltaTime)
@@ -102,12 +108,13 @@ void ATpsPlayer::OnComponentBeginOverlap(UPrimitiveComponent* OverlappedComponen
     , bool bFromSweep
     , const FHitResult& SweepResult)
 {
-    AFieldItemBase* FieldItem = Cast<AFieldItemBase>(OtherActor);
+    AFieldItem* FieldItem = Cast<AFieldItem>(OtherActor);
     if (!IsValid(FieldItem))
     {
         JError("%s is not FieldItme", *OtherActor->GetName());
         return;
     }
 
-    FieldItem->OnPicked(this);
+
+    GatchaWidget->SetVisibility(ESlateVisibility::Visible);
 }

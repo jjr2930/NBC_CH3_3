@@ -1,7 +1,7 @@
-#include "FieldItemSpawnVolume.h"
+﻿#include "FieldItemSpawnVolume.h"
 #include "FieldItemSpawnRow.h"
 #include "JUtility.h"
-#include "FieldItemBase.h"
+#include "FieldItem.h"
 #include "Kismet/GameplayStatics.h"
 
 AFieldItemSpawnVolume::AFieldItemSpawnVolume()
@@ -28,7 +28,7 @@ AActor* AFieldItemSpawnVolume::Spawn()
 
     float RandomRate = FMath::FRandRange(0.0f, TotalRate);
     float Elapsed = 0.0f;
-    TSubclassOf<AFieldItemBase> FoundFieldItemClass = nullptr;
+    TSubclassOf<AFieldItem> FoundFieldItemClass = nullptr;
     FFieldItemSpawnRow* FoundRow = nullptr;
     for (auto It : SpawnRows)
     {
@@ -53,14 +53,14 @@ AActor* AFieldItemSpawnVolume::Spawn()
     FVector RandomPosition = GetRandomPositionInVolume();
     FRotator SpawnRotator(0.0, 0.0, 0.0);
     FTransform SpawnTransform(SpawnRotator, RandomPosition, FVector::One());
-    AFieldItemBase* SpawnedActor 
-        = GetWorld()->SpawnActorDeferred<AFieldItemBase>(FoundFieldItemClass, SpawnTransform);
+    AFieldItem* SpawnedActor 
+        = GetWorld()->SpawnActorDeferred<AFieldItem>(FoundFieldItemClass, SpawnTransform);
 
     checkf(IsValid(SpawnedActor), TEXT("AFieldItemBase is nullptr"));
 
     SpawnedActor->SetData(FoundRow);
     AActor* Temp = UGameplayStatics::FinishSpawningActor(SpawnedActor, SpawnTransform);
-    SpawnedActor = Cast<AFieldItemBase>(Temp);
+    SpawnedActor = Cast<AFieldItem>(Temp);
     checkf(IsValid(SpawnedActor), TEXT("%s is not FieldItembase"), *Temp->GetName());
 
     return SpawnedActor;

@@ -1,8 +1,8 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "FieldItemBase.generated.h"
+#include "FieldItem.generated.h"
 
 class USphereComponent;
 class UStaticMesshComponent;
@@ -10,13 +10,13 @@ class UStatComponent;
 struct FFieldItemSpawnRow;
 
 UCLASS()
-class NBC_CH3_3_API AFieldItemBase : public AActor
+class NBC_CH3_3_API AFieldItem : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	AFieldItemBase();
+	AFieldItem();
     void SetData(FFieldItemSpawnRow* DataTableRow);
 
 protected:
@@ -25,9 +25,6 @@ protected:
     virtual void EndPlay(EEndPlayReason::Type Reason) override;
 
     
-public:	
-    virtual void OnPicked(TObjectPtr<AActor> Who) PURE_VIRTUAL(AFieldItemBase::OnPicked, );
-
 protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Field Items|Components")
     TObjectPtr<USphereComponent> SphereCollision;

@@ -1,10 +1,10 @@
-#include "FieldItemBase.h"
-#include <Components/SphereComponent.h>
-#include <Components/StaticMeshComponent.h>
+﻿#include "FieldItem.h"
 #include "IngameGameMode.h"
 #include "JUtility.h"
+#include <Components/SphereComponent.h>
+#include <Components/StaticMeshComponent.h>
 
-AFieldItemBase::AFieldItemBase()
+AFieldItem::AFieldItem()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
@@ -16,12 +16,12 @@ AFieldItemBase::AFieldItemBase()
 }
 
 // Called when the game starts or when spawned
-void AFieldItemBase::BeginPlay()
+void AFieldItem::BeginPlay()
 {
 	Super::BeginPlay();	
 }
 
-void AFieldItemBase::EndPlay(EEndPlayReason::Type Reason)
+void AFieldItem::EndPlay(EEndPlayReason::Type Reason)
 {
     if (Reason == EEndPlayReason::Type::Destroyed)
     {
@@ -38,8 +38,7 @@ void AFieldItemBase::EndPlay(EEndPlayReason::Type Reason)
     Super::EndPlay(Reason);
 }
 
-void AFieldItemBase::SetData(FFieldItemSpawnRow* DataTableRow)
+void AFieldItem::SetData(FFieldItemSpawnRow* DataTableRow)
 {
     this->Row = DataTableRow;
 }
-

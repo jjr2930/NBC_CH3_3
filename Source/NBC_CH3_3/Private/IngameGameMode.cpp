@@ -1,7 +1,7 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 #include "IngameGameMode.h"
 #include "JUtility.h"
-#include "FieldItemBase.h"
+#include "FieldItem.h"
 #include "Kismet/GameplayStatics.h"
 #include "IngameState.h"
 
@@ -12,7 +12,7 @@ AIngameGameMode::AIngameGameMode()
     PrimaryActorTick.bCanEverTick = true;
 }
 
-void AIngameGameMode::PickupFieldItem(const AFieldItemBase& Item)
+void AIngameGameMode::PickupFieldItem(const AFieldItem& Item)
 {
     checkf(IsValid(&Item), TEXT("Item is not valiud"));
     checkf(IsValid(IngameState), TEXT("Current game state is not IngameState"));
