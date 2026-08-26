@@ -14,7 +14,7 @@ class NBC_CH3_3_API AIngameGameMode : public AGameModeBase
     
 public:
     AIngameGameMode();
-    void PickupFieldItem(const AFieldItem& item);
+    void PickupFieldItem(const AFieldItem& item, AActor* Who);
     void SetNextWave();
 
     virtual void BeginPlay() override;

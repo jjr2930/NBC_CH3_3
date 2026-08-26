@@ -1,6 +1,8 @@
 ﻿#include "FieldItem.h"
 #include "IngameGameMode.h"
 #include "JUtility.h"
+#include "FieldItemSpawnRow.h"
+
 #include <Components/SphereComponent.h>
 #include <Components/StaticMeshComponent.h>
 
@@ -38,7 +40,34 @@ void AFieldItem::EndPlay(EEndPlayReason::Type Reason)
     Super::EndPlay(Reason);
 }
 
-void AFieldItem::SetData(FFieldItemSpawnRow* DataTableRow)
+FFieldItemSpawnRow* AFieldItem::Roll()
 {
-    this->Row = DataTableRow;
+    //roll item drop table!
+    TArray<FFieldItemSpawnRow*> SpawnRows;
+    ItemDropTable->GetAllRows<FFieldItemSpawnRow>(FString(TEXT("Field Item Spawn Volume")), SpawnRows);
+    checkf(SpawnRows.Num() > 0, TEXT("Empty DataTable"));
+
+    float TotalRate = 0;
+    for (auto it : SpawnRows)
+    {
+        TotalRate += it->DropRate;
+    }
+
+    float RandomRate = FMath::FRandRange(0.0f, TotalRate);
+    float Elapsed = 0.0f;
+    TSubclassOf<AFieldItem> FoundFieldItemClass = nullptr;
+    FFieldItemSpawnRow* FoundRow = nullptr;
+    for (auto It : SpawnRows)
+    {
+        if (Elapsed <= RandomRate && RandomRate < Elapsed + It->DropRate)
+        {
+            FoundFieldItemClass = It->FieldItemActorClass;
+            FoundRow = It;
+            break;
+        }
+        else
+        {
+            Elapsed += It->DropRate;
+        }
+    }
 }

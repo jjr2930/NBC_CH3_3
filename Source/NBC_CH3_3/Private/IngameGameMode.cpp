@@ -4,40 +4,78 @@
 #include "FieldItem.h"
 #include "Kismet/GameplayStatics.h"
 #include "IngameState.h"
+#include "StatComponent.h"
+#include "IngameGameInstance.h"
+
+#include "FieldItemSpawnRow.h"
 
 AIngameGameMode::AIngameGameMode()
+    : IngameState(nullptr)
 {
     GameStateClass = AIngameState::StaticClass();
 
     PrimaryActorTick.bCanEverTick = true;
 }
 
-void AIngameGameMode::PickupFieldItem(const AFieldItem& Item)
+void AIngameGameMode::PickupFieldItem(const AFieldItem& Item, AActor* Who)
 {
     checkf(IsValid(&Item), TEXT("Item is not valiud"));
     checkf(IsValid(IngameState), TEXT("Current game state is not IngameState"));
 
-    JLog("아이템 습득") 
-    int CurrentPickupCount = IngameState->GetCurrentPickUpCount();
-    IngameState->SetCurrentPickUpCount(++CurrentPickupCount);
-
-    int TotalPickupCount = IngameState->GetTotalPickUpCount();
-    if (CurrentPickupCount < TotalPickupCount)
-        return;
+    FFieldItemSpawnRow* Row = Item.Roll();
+    int Amount = Row->RollAmount();
     
-    int CurrentWaveIndex = IngameState->GetCurrentWaveIndex();
-    JLog("%d Wave cleared", CurrentWaveIndex + 1);
+    JLog("%s %d 획득", UEnum::GetValueAsString(Row->ItemType), Amount);
+    switch (Row->ItemType)
+    {
+    case EItemType::Mine:
+    {
+        UStatComponent* StatComponent = Who->GetComponentByClass<UStatComponent>();
+        checkf(IsValid(StatComponent), TEXT("There is no StatComponent"));
 
-    int TotalWaveCount = IngameState->GetTotalWaveCount();
-    if (CurrentWaveIndex == TotalWaveCount - 1) //인덱스는 0부터 시작하니까...
-    {
-        JLog("StageCleared, load next stage");
-        UGameplayStatics::OpenLevelBySoftObjectPtr(GetWorld(), NextStage);
+        int CurrentHealth = StatComponent->GetInt(ECharacterStatType::Health, 0);
+        CurrentHealth -= Amount;
+        StatComponent->SetOrAdd(ECharacterStatType::Health, CurrentHealth);
+        if (CurrentHealth <= 0)
+        {
+            JError("사망을 구현하세요");
+            return;
+        }
+
+        break;
     }
-    else
+        
+
+    case EItemType::Coin:
     {
-        SetNextWave();
+        UIngameGameInstance* GameInstance = Cast<UIngameGameInstance>(GetGameInstance());
+        checkf(IsValid(GameInstance), TEXT("GameInstnace is not UIngameGameInstance"));
+
+        GameInstance->AddScore(Amount);
+        break;
     }
+
+    case EItemType::HealthPack:
+    {
+        UStatComponent* StatComponent = Who->GetComponentByClass<UStatComponent>();
+        checkf(IsValid(StatComponent), TEXT("There is no StatComponent"));
+
+        int CurrentHealth = StatComponent->GetInt(ECharacterStatType::Health, 0);
+        int MaxHealth = StatComponent->GetInt(ECharacterStatType::MaxHealth, 0);
+
+        CurrentHealth += Amount;
+        if (CurrentHealth > MaxHealth)
+        {
+            CurrentHealth = MaxHealth;
+        }
+
+        StatComponent->SetOrAdd(ECharacterStatType::Health, CurrentHealth);
+        break;
+    }
+
+    default:
+        break;
+    }    
 }
 
 void AIngameGameMode::SetNextWave()

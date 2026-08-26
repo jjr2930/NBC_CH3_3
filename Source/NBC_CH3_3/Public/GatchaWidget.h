@@ -17,6 +17,9 @@ protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="GatchWidget|Properties")
     TObjectPtr<UDataTable> ItemDropTable;
 
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GatchWidget|Properties")
+    TObjectPtr<UDataTable> ItemTable;
+
+    UFUNCTION()
     void HandleVisibilityChanged(ESlateVisibility InVisibility);
-    void PlayGatchaAnimation();
 };

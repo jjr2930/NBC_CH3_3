@@ -3,6 +3,7 @@
 #include "Engine/DataTable.h"
 #include "CoreMinimal.h"
 #include "FieldItemSpawnRow.generated.h"
+#include "Enums.h"
 
 class AFieldItem;
 
@@ -17,10 +18,7 @@ public:
 
 public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ItemSpawnRow|Properties")
-    int ItemTableKey;
-
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ItemSpawnRow|Properties")
-    TSubclassOf<AFieldItem> FieldItemActorClass;
+    EItemType ItemType;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ItemDataRow")
     int AmountMin;

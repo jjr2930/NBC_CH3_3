@@ -64,6 +64,6 @@ protected:
     
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "IngameState|Properties")
     float RemainTime;
-
+    
     float StartTime;
 };

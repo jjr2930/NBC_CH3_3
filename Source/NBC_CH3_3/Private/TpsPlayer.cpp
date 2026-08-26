@@ -8,6 +8,7 @@
 #include "GameFramework/Character.h"
 #include "FieldItem.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "IngameGameMode.h"
 #include "Components/CapsuleComponent.h"
 #include <Camera/CameraComponent.h>
 #include <Blueprint/UserWidget.h>
@@ -111,10 +112,13 @@ void ATpsPlayer::OnComponentBeginOverlap(UPrimitiveComponent* OverlappedComponen
     AFieldItem* FieldItem = Cast<AFieldItem>(OtherActor);
     if (!IsValid(FieldItem))
     {
-        JError("%s is not FieldItme", *OtherActor->GetName());
         return;
     }
 
-
     GatchaWidget->SetVisibility(ESlateVisibility::Visible);
+
+    AIngameGameMode* GameMode = Cast<AIngameGameMode>(GetWorld()->GetAuthGameMode());
+    checkf(IsValid(GameMode), TEXT("Current game mode is not AIngameGameMode"));
+
+    GameMode->PickupFieldItem(*FieldItem);
 }

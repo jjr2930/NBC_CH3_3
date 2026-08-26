@@ -1,7 +1,8 @@
-#pragma once
+﻿#pragma once
 
 #include "Engine/DataTable.h"
 #include "CoreMinimal.h"
+#include "Enums.h"
 #include "ItemDataRow.generated.h"
 
 USTRUCT(BlueprintType)
@@ -14,6 +15,8 @@ public:
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="ItemDataRow")
     int Key;
+    
+
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ItemDataRow")
     FName Name;

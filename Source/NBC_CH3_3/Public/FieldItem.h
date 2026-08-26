@@ -17,14 +17,14 @@ class NBC_CH3_3_API AFieldItem : public AActor
 public:	
 	// Sets default values for this actor's properties
 	AFieldItem();
-    void SetData(FFieldItemSpawnRow* DataTableRow);
+
+    FFieldItemSpawnRow* Roll() const;
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
     virtual void EndPlay(EEndPlayReason::Type Reason) override;
 
-    
 protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Field Items|Components")
     TObjectPtr<USphereComponent> SphereCollision;
@@ -33,7 +33,5 @@ protected:
     TObjectPtr<UStaticMeshComponent> StaticMesh;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Field Items|Properties")
-    TObjectPtr<UDataTable> ItemTables;
-
-    FFieldItemSpawnRow* Row;
+    TObjectPtr<UDataTable> ItemDropTable;
 };
