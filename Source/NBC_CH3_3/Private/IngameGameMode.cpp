@@ -25,7 +25,7 @@ void AIngameGameMode::PickupFieldItem(const AFieldItem& Item, AActor* Who)
     FFieldItemSpawnRow* Row = Item.Roll();
     int Amount = Row->RollAmount();
     
-    JLog("%s %d 획득", UEnum::GetValueAsString(Row->ItemType), Amount);
+    JLog("%s %d 획득", *UEnum::GetValueAsString(Row->ItemType), Amount);
     switch (Row->ItemType)
     {
     case EItemType::Mine:

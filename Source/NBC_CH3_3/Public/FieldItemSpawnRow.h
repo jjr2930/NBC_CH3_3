@@ -2,8 +2,8 @@
 
 #include "Engine/DataTable.h"
 #include "CoreMinimal.h"
-#include "FieldItemSpawnRow.generated.h"
 #include "Enums.h"
+#include "FieldItemSpawnRow.generated.h"
 
 class AFieldItem;
 

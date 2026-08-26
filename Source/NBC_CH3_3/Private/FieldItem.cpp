@@ -33,14 +33,12 @@ void AFieldItem::EndPlay(EEndPlayReason::Type Reason)
             JError("Current gamemode is not IngameGameMode type");
             return;
         }
-
-        IngameMode->PickupFieldItem(*this);
     }
 
     Super::EndPlay(Reason);
 }
 
-FFieldItemSpawnRow* AFieldItem::Roll()
+FFieldItemSpawnRow* AFieldItem::Roll() const
 {
     //roll item drop table!
     TArray<FFieldItemSpawnRow*> SpawnRows;
@@ -61,7 +59,6 @@ FFieldItemSpawnRow* AFieldItem::Roll()
     {
         if (Elapsed <= RandomRate && RandomRate < Elapsed + It->DropRate)
         {
-            FoundFieldItemClass = It->FieldItemActorClass;
             FoundRow = It;
             break;
         }
@@ -70,4 +67,6 @@ FFieldItemSpawnRow* AFieldItem::Roll()
             Elapsed += It->DropRate;
         }
     }
+
+    return FoundRow;
 }

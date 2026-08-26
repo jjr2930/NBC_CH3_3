@@ -9,6 +9,8 @@
 #include "FieldItem.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "IngameGameMode.h"
+#include "GatchaWidget.h"
+
 #include "Components/CapsuleComponent.h"
 #include <Camera/CameraComponent.h>
 #include <Blueprint/UserWidget.h>
@@ -34,9 +36,9 @@ void ATpsPlayer::BeginPlay()
 
     checkf(IsValid(GatchaWidget), TEXT("GatchaWidget is invalid"));
 
-    GatchaWidgetInstance = CreateWidget<UUserWidget>(GatchaWidget);
-    GatchaWidget->AddToViewport(1);
-    GatchaWidget->SetVisibility(ESlateVisibility::Hidden);	
+    GatchaWidgetInstance = CreateWidget<UGatchaWidget>(GatchaWidget);
+    GatchaWidgetInstance->AddToViewport(1);
+    GatchaWidgetInstance->SetVisibility(ESlateVisibility::Hidden);
 }
 
 void ATpsPlayer::Tick(float DeltaTime)
@@ -115,10 +117,10 @@ void ATpsPlayer::OnComponentBeginOverlap(UPrimitiveComponent* OverlappedComponen
         return;
     }
 
-    GatchaWidget->SetVisibility(ESlateVisibility::Visible);
+    //GatchaWidget->SetVisibility(ESlateVisibility::Visible);
 
     AIngameGameMode* GameMode = Cast<AIngameGameMode>(GetWorld()->GetAuthGameMode());
     checkf(IsValid(GameMode), TEXT("Current game mode is not AIngameGameMode"));
 
-    GameMode->PickupFieldItem(*FieldItem);
+    GameMode->PickupFieldItem(*FieldItem, this);
 }

@@ -28,13 +28,11 @@ AActor* AFieldItemSpawnVolume::Spawn()
 
     float RandomRate = FMath::FRandRange(0.0f, TotalRate);
     float Elapsed = 0.0f;
-    TSubclassOf<AFieldItem> FoundFieldItemClass = nullptr;
     FFieldItemSpawnRow* FoundRow = nullptr;
     for (auto It : SpawnRows)
     {
         if (Elapsed <= RandomRate && RandomRate < Elapsed + It->DropRate)
         {
-            FoundFieldItemClass = It->FieldItemActorClass;
             FoundRow = It;
             break;
         }
@@ -44,24 +42,13 @@ AActor* AFieldItemSpawnVolume::Spawn()
         }
     }
 
-    if (!IsValid(FoundFieldItemClass))
-    {
-        JError("Can not found fieldItem");
-        return nullptr;
-    }
-
+    checkf(IsValid(FieldItem), TEXT("Field Item is nullptr"));
+    
     FVector RandomPosition = GetRandomPositionInVolume();
     FRotator SpawnRotator(0.0, 0.0, 0.0);
     FTransform SpawnTransform(SpawnRotator, RandomPosition, FVector::One());
     AFieldItem* SpawnedActor 
-        = GetWorld()->SpawnActorDeferred<AFieldItem>(FoundFieldItemClass, SpawnTransform);
-
-    checkf(IsValid(SpawnedActor), TEXT("AFieldItemBase is nullptr"));
-
-    SpawnedActor->SetData(FoundRow);
-    AActor* Temp = UGameplayStatics::FinishSpawningActor(SpawnedActor, SpawnTransform);
-    SpawnedActor = Cast<AFieldItem>(Temp);
-    checkf(IsValid(SpawnedActor), TEXT("%s is not FieldItembase"), *Temp->GetName());
+        = GetWorld()->SpawnActor<AFieldItem>(FieldItem->StaticClass(), SpawnTransform);
 
     return SpawnedActor;
 }

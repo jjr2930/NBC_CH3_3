@@ -8,6 +8,7 @@ class UStatComponent;
 class UInventoryComponent;
 class USpringArmComponent;
 class UCameraComponent;
+class UGatchaWidget;
 struct FInputActionInstance;
 
 UCLASS()
@@ -72,8 +73,8 @@ protected:
     //  Widgets
     ///////////////////////////////////////////////////////
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TpsPlayer|Widgets")
-    TObjectPtr<UUserWidget> GatchaWidget;
+    TObjectPtr<UGatchaWidget> GatchaWidget;
 
-    TObjectPtr<UUserWidget> GatchaWidgetInstance;
+    TObjectPtr<UGatchaWidget> GatchaWidgetInstance;
 };
 
