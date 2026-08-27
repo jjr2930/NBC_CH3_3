@@ -31,6 +31,8 @@ public:
     
     void OnMoveAction(const FInputActionInstance& Value);
     void OnLookAction(const FInputActionInstance& Value);
+    TObjectPtr<UStatComponent> GetStatComponent();
+
 
     UFUNCTION()
     void OnComponentBeginOverlap(

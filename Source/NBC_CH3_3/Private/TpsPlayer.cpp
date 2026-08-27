@@ -106,6 +106,11 @@ void ATpsPlayer::OnLookAction(const FInputActionInstance& Value)
     AddControllerYawInput(LookingInput.X);
 }
 
+TObjectPtr<UStatComponent> ATpsPlayer::GetStatComponent()
+{
+    return PlayerStat;
+}
+
 void ATpsPlayer::OnComponentBeginOverlap(UPrimitiveComponent* OverlappedComponent
     , AActor* OtherActor
     , UPrimitiveComponent* OtherComp

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
@@ -10,6 +10,7 @@ struct FInputActionInstance;
 class UInputAction;
 class UInputMappingContext;
 class UIngameWidget;
+class UPlayerStatWidget;
 
 UCLASS()
 class NBC_CH3_3_API ATpsPlayerController : public APlayerController
@@ -36,4 +37,8 @@ protected:
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TpsPlayerController|UI")
     TSubclassOf<UIngameWidget> IngameWidget;
+
+    //TODO: IngameWidget 안에 넣는게 맞지 않을까?
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TpsPlayerController|UI")
+    TSubclassOf<UPlayerStatWidget> PlayerStatWidget;
 };

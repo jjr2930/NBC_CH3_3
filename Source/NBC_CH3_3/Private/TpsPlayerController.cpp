@@ -1,7 +1,10 @@
-#include "TpsPlayerController.h"
+﻿#include "TpsPlayerController.h"
 #include "JUtility.h"
 #include "Blueprint/UserWidget.h"
 #include "IngameWidget.h"
+#include "PlayerStatWidget.h"
+#include "StatComponent.h"
+#include "TpsPlayer.h"
 
 #include <EnhancedInputComponent.h>
 #include <EnhancedInputSubsystems.h>
@@ -44,7 +47,18 @@ void ATpsPlayerController::BeginPlay()
 
     TObjectPtr<UIngameWidget> WidgetInstance = CreateWidget<UIngameWidget>(GetWorld(), IngameWidget);
     WidgetInstance->AddToViewport(0);
+    JASSERT(IsValid(PlayerStatWidget), "Player stat widget is inavlid");
 
+    TObjectPtr<UPlayerStatWidget> StatWidgetInstance = CreateWidget<UPlayerStatWidget>(GetWorld(), IngameWidget);
+    
+    ATpsPlayer* TpsPlayer = Cast<ATpsPlayer>(GetPawn());
+    JASSERT(IsValid(TpsPlayer), "Player is not ATpsPlayer");
+    
+    TObjectPtr<UStatComponent> StatComponent = TpsPlayer->GetStatComponent();
+    JASSERT(IsValid(StatComponent), "Player does not have StatComponent");
+
+    StatWidgetInstance->SetStatComponent(StatComponent);
+    
     FInputModeGameOnly GameOnly;
     SetInputMode(GameOnly);
     SetShowMouseCursor(false);

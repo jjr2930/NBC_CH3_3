@@ -1,4 +1,4 @@
-
+﻿
 
 
 #include "StatComponent.h"
@@ -25,7 +25,7 @@ void UStatComponent::SetOrAdd(ECharacterStatType statType, float Value)
     FloatStats.FindOrAdd(statType, Value);
 }
 
-int UStatComponent::GetInt(ECharacterStatType StatType, int DefaultValue)
+int UStatComponent::GetInt(ECharacterStatType StatType, int DefaultValue )
 {
     if (IntStats.Contains(StatType))
     {
@@ -51,6 +51,16 @@ float UStatComponent::GetFloat(ECharacterStatType StatType, float DefaultValue)
         FloatStats.Add(StatType, DefaultValue);
         return DefaultValue;
     }
+}
+
+UStatComponent::FOnIntStatChangedEvent* UStatComponent::GetIntCallbacks()
+{
+    return &IntStatChangedCallbacks;
+}
+
+UStatComponent::FOnFloatStatChangedEvent* UStatComponent::GetFloatCallback()
+{
+    return &FloatStatChangedCallbacks;
 }
 
 // Called when the game starts
