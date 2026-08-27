@@ -23,7 +23,7 @@ AActor* AFieldItemSpawnVolume::Spawn()
     float TotalRate = 0;
     for (auto it : SpawnRows)
     {
-        TotalRate += it->DropRate;
+        TotalRate += it->GetDropRate();
     }
 
     float RandomRate = FMath::FRandRange(0.0f, TotalRate);
@@ -31,14 +31,14 @@ AActor* AFieldItemSpawnVolume::Spawn()
     FFieldItemSpawnRow* FoundRow = nullptr;
     for (auto It : SpawnRows)
     {
-        if (Elapsed <= RandomRate && RandomRate < Elapsed + It->DropRate)
+        if (Elapsed <= RandomRate && RandomRate < Elapsed + It->GetDropRate())
         {
             FoundRow = It;
             break;
         }
         else
         {
-            Elapsed += It->DropRate;
+            Elapsed += It->GetDropRate();
         }
     }
 
@@ -48,7 +48,7 @@ AActor* AFieldItemSpawnVolume::Spawn()
     FRotator SpawnRotator(0.0, 0.0, 0.0);
     FTransform SpawnTransform(SpawnRotator, RandomPosition, FVector::One());
     AFieldItem* SpawnedActor 
-        = GetWorld()->SpawnActor<AFieldItem>(FieldItem->StaticClass(), SpawnTransform);
+        = GetWorld()->SpawnActor<AFieldItem>(FieldItem, SpawnTransform);
 
     return SpawnedActor;
 }

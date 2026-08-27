@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 
@@ -20,3 +20,21 @@ if(GEngine) { \
     GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Red, FString::Printf(TEXT(Format), ##__VA_ARGS__)); \
 }
  
+
+#define JASSERT(Condition, Format, ...) \
+if(!Condition) { \
+    JError(Format, ##__VA_ARGS__); \
+    return; \
+}
+
+#define JASSERT_INT(Condition, Format, ...) \
+if(!Condition) { \
+    JError(Format, ##__VA_ARGS__); \
+    return -1;\
+}
+
+#define JASSERT_BOOL(Condition, Format, ...) \
+if(!Condition) { \
+    JError(Format, ##__VA_ARGS__); \
+    return false;\
+}

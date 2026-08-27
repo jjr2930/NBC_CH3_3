@@ -10,6 +10,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "IngameGameMode.h"
 #include "GatchaWidget.h"
+#include "FieldItemSpawnRow.h"
 
 #include "Components/CapsuleComponent.h"
 #include <Camera/CameraComponent.h>
@@ -36,9 +37,10 @@ void ATpsPlayer::BeginPlay()
 
     checkf(IsValid(GatchaWidget), TEXT("GatchaWidget is invalid"));
 
-    GatchaWidgetInstance = CreateWidget<UGatchaWidget>(GatchaWidget);
+    GatchaWidgetInstance = CreateWidget<UGatchaWidget>(GetWorld(), GatchaWidget);
     GatchaWidgetInstance->AddToViewport(1);
     GatchaWidgetInstance->SetVisibility(ESlateVisibility::Hidden);
+
 }
 
 void ATpsPlayer::Tick(float DeltaTime)
@@ -114,13 +116,70 @@ void ATpsPlayer::OnComponentBeginOverlap(UPrimitiveComponent* OverlappedComponen
     AFieldItem* FieldItem = Cast<AFieldItem>(OtherActor);
     if (!IsValid(FieldItem))
     {
+        //ignore other case!
         return;
     }
-
-    //GatchaWidget->SetVisibility(ESlateVisibility::Visible);
 
     AIngameGameMode* GameMode = Cast<AIngameGameMode>(GetWorld()->GetAuthGameMode());
     checkf(IsValid(GameMode), TEXT("Current game mode is not AIngameGameMode"));
 
-    GameMode->PickupFieldItem(*FieldItem, this);
+    FFieldItemSpawnRow* Row = FieldItem->Roll();
+    int Amount = Row->RollAmount();
+    EItemType ItemType = Row->GetItemType();
+
+    UGatchaWidget::FGatchaAnimationFinishedEvent AnimationFinishedCallback;
+    AnimationFinishedCallback.BindDynamic(this, &ATpsPlayer::OnGatchaAnimationFinished);
+
+    GatchaWidgetInstance->PlayAnimation(AnimationFinishedCallback);
+    GatchaWidgetInstance->SetItemType(ItemType);
+    GatchaWidgetInstance->SetVisibility(ESlateVisibility::Visible);
+    GatchaWidgetInstance->PlayAnimation(AnimationFinishedCallback);
+
+    GetWorld()->DestroyActor(FieldItem);
+}
+
+void ATpsPlayer::OnGatchaAnimationFinished()
+{
+    AIngameGameMode* GameMode = Cast<AIngameGameMode>(GetWorld()->GetAuthGameMode());
+
+    switch (CurrentItemType)
+    {
+    case EItemType::Coin:
+    {
+        GameMode->AddPoint(CurrentAmount);
+        break;
+    }
+
+    case EItemType::HealthPack:
+    {
+        int MaxHealth = PlayerStat->GetInt(ECharacterStatType::MaxHealth, 0);
+        int CurrentHealth = PlayerStat->GetInt(ECharacterStatType::Health, 0);
+        CurrentHealth += CurrentAmount;
+        if (CurrentHealth >= MaxHealth)
+            CurrentHealth = MaxHealth;
+
+        PlayerStat->SetOrAdd(ECharacterStatType::Health, CurrentHealth);
+        break;
+    }
+
+
+    case EItemType::Mine:
+    {
+        int CurrentHealth = PlayerStat->GetInt(ECharacterStatType::Health, 0);
+        CurrentHealth -= CurrentAmount;
+        if (CurrentHealth < 0)
+            CurrentHealth = 0;
+
+        PlayerStat->SetOrAdd(ECharacterStatType::Health, CurrentHealth);
+        if (CurrentHealth == 0)
+        {
+            JLog("사망을 구현하세요");
+        }
+
+        break;
+    }
+
+    default:
+        break;
+    }
 }

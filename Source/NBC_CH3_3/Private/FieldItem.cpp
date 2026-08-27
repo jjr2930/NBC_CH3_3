@@ -40,6 +40,8 @@ void AFieldItem::EndPlay(EEndPlayReason::Type Reason)
 
 FFieldItemSpawnRow* AFieldItem::Roll() const
 {
+    checkf(IsValid(ItemDropTable), TEXT("Table is not set"));
+
     //roll item drop table!
     TArray<FFieldItemSpawnRow*> SpawnRows;
     ItemDropTable->GetAllRows<FFieldItemSpawnRow>(FString(TEXT("Field Item Spawn Volume")), SpawnRows);
@@ -48,7 +50,7 @@ FFieldItemSpawnRow* AFieldItem::Roll() const
     float TotalRate = 0;
     for (auto it : SpawnRows)
     {
-        TotalRate += it->DropRate;
+        TotalRate += it->GetDropRate();
     }
 
     float RandomRate = FMath::FRandRange(0.0f, TotalRate);
@@ -57,14 +59,14 @@ FFieldItemSpawnRow* AFieldItem::Roll() const
     FFieldItemSpawnRow* FoundRow = nullptr;
     for (auto It : SpawnRows)
     {
-        if (Elapsed <= RandomRate && RandomRate < Elapsed + It->DropRate)
+        if (Elapsed <= RandomRate && RandomRate < Elapsed + It->GetDropRate())
         {
             FoundRow = It;
             break;
         }
         else
         {
-            Elapsed += It->DropRate;
+            Elapsed += It->GetDropRate();
         }
     }
 

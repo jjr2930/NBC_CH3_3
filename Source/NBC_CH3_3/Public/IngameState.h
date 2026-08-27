@@ -10,8 +10,9 @@ class NBC_CH3_3_API AIngameState : public AGameStateBase
 	GENERATED_BODY()
 
 public:
-    void SetCurrentPickUpCount(int PickupCount   );
-    void SetTotalPickUpCount(int Count);
+    void AddCurrentPoint(int InAmount);
+    void SetCurrentPoint(int PickupCount   );
+    void SetTargetPoint(int Count);
     void SetCurrentWaveIndex(int Value);
     void SetTotalWaveCount(int Value);
     void SetStartTime(float Value);
@@ -48,10 +49,10 @@ public:
 
 protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "IngameState|Properties")
-    int CurrentPickUpCount;
+    int CurrentPoint;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "IngameState|Properties")
-    int TotalPickupCount;
+    int TargetPoint;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "IngameState|Properties")
     float WaveDuration;

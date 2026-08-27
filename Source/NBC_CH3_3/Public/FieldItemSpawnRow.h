@@ -15,8 +15,10 @@ struct NBC_CH3_3_API  FFieldItemSpawnRow : public FTableRowBase
 public:
     FFieldItemSpawnRow();
     int RollAmount();
+    EItemType GetItemType();
+    float GetDropRate();
 
-public:
+protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ItemSpawnRow|Properties")
     EItemType ItemType;
 

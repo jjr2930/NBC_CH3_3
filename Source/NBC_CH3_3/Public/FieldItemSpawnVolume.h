@@ -22,5 +22,5 @@ protected:
     TObjectPtr<UDataTable> DataTable;
     
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FieldItemSpawnVolume")
-    TObjectPtr<AFieldItem> FieldItem;
+    TSubclassOf<AFieldItem> FieldItem;
 };

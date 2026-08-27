@@ -1,4 +1,4 @@
-#include "IngameWidget.h"
+ï»¿#include "IngameWidget.h"
 #include "IngameState.h"
 #include <Components/TextBlock.h>
 #include <Components/ProgressBar.h>
@@ -26,7 +26,7 @@ void UIngameWidget::SetWaveText(int InCurrentWaveIndex, int InTotalWaveCount)
 {
     FText TextToDisplay = FText::Format(
         FText::FromString(TEXT("{0}/{1}"))
-        , InCurrentWaveIndex + 1    //ÀÎµ¦½º´Â 0ºÎÅÍ ½ÃÀÛÇÑ´Ù.
+        , InCurrentWaveIndex + 1    //ì¸ë±ìŠ¤ëŠ” 0ë¶€í„° ì‹œìž‘í•œë‹¤.
         , InTotalWaveCount
     );
 
@@ -42,12 +42,12 @@ void UIngameWidget::NativeOnInitialized()
     IngameState->OnRemainTimeChanged.AddUObject(this, &UIngameWidget::SetWaveDuration);
     IngameState->OnWaveIndexChanged.AddUObject(this, &UIngameWidget::SetWaveText);
 
-    //Ã³À½¿£ ¾ò¾î¿Í¼­ ¼¼ÆÃÇÏÀÚ.
+    //ì²˜ìŒì—” ì–»ì–´ì™€ì„œ ì„¸íŒ…í•˜ìž.
     int CurrentPickupCount = IngameState->GetCurrentPickUpCount();
-    int TotalPickupCount = IngameState->GetTotalPickUpCount();
+    int TargetPoint = IngameState->GetTotalPickUpCount();
     int CurrentWaveIndex = IngameState->GetCurrentWaveIndex();
     int TotalWaveCount = IngameState->GetTotalWaveCount();
 
-    SetPickupCount(CurrentPickupCount, TotalPickupCount);
+    SetPickupCount(CurrentPickupCount, TargetPoint);
     SetWaveText(CurrentWaveIndex, TotalWaveCount);
 }

@@ -6,11 +6,15 @@
 #include "Blueprint/UserWidget.h"
 #include "PlayerStatWidget.generated.h"
 
+class UProgressBar;
+class UTextBlock;
+
 UCLASS()
 class NBC_CH3_3_API UPlayerStatWidget : public UUserWidget
 {
 	GENERATED_BODY()
 	
 protected:
-
+    TObjectPtr<UProgressBar> HealthProgressBar;
+    TObjectPtr<UTextBlock> HealthProgressBarText;
 };

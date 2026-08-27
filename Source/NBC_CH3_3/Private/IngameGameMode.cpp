@@ -17,66 +17,71 @@ AIngameGameMode::AIngameGameMode()
     PrimaryActorTick.bCanEverTick = true;
 }
 
-void AIngameGameMode::PickupFieldItem(const AFieldItem& Item, AActor* Who)
-{
-    checkf(IsValid(&Item), TEXT("Item is not valiud"));
-    checkf(IsValid(IngameState), TEXT("Current game state is not IngameState"));
-
-    FFieldItemSpawnRow* Row = Item.Roll();
-    int Amount = Row->RollAmount();
-    
-    JLog("%s %d 획득", *UEnum::GetValueAsString(Row->ItemType), Amount);
-    switch (Row->ItemType)
-    {
-    case EItemType::Mine:
-    {
-        UStatComponent* StatComponent = Who->GetComponentByClass<UStatComponent>();
-        checkf(IsValid(StatComponent), TEXT("There is no StatComponent"));
-
-        int CurrentHealth = StatComponent->GetInt(ECharacterStatType::Health, 0);
-        CurrentHealth -= Amount;
-        StatComponent->SetOrAdd(ECharacterStatType::Health, CurrentHealth);
-        if (CurrentHealth <= 0)
-        {
-            JError("사망을 구현하세요");
-            return;
-        }
-
-        break;
-    }
-        
-
-    case EItemType::Coin:
-    {
-        UIngameGameInstance* GameInstance = Cast<UIngameGameInstance>(GetGameInstance());
-        checkf(IsValid(GameInstance), TEXT("GameInstnace is not UIngameGameInstance"));
-
-        GameInstance->AddScore(Amount);
-        break;
-    }
-
-    case EItemType::HealthPack:
-    {
-        UStatComponent* StatComponent = Who->GetComponentByClass<UStatComponent>();
-        checkf(IsValid(StatComponent), TEXT("There is no StatComponent"));
-
-        int CurrentHealth = StatComponent->GetInt(ECharacterStatType::Health, 0);
-        int MaxHealth = StatComponent->GetInt(ECharacterStatType::MaxHealth, 0);
-
-        CurrentHealth += Amount;
-        if (CurrentHealth > MaxHealth)
-        {
-            CurrentHealth = MaxHealth;
-        }
-
-        StatComponent->SetOrAdd(ECharacterStatType::Health, CurrentHealth);
-        break;
-    }
-
-    default:
-        break;
-    }    
-}
+//void AIngameGameMode::PickupFieldItem(AFieldItem& InItem, AActor& InWho, EItemType* OutItemType, int* OutAmount)
+//{
+//    checkf(IsValid(&InItem), TEXT("Item is not valiud"));
+//    checkf(IsValid(IngameState), TEXT("Current game state is not IngameState"));
+//
+//    FFieldItemSpawnRow* Row = InItem.Roll();
+//    int Amount = Row->RollAmount();
+//
+//    JLog("%s %d 획득", *UEnum::GetValueAsString(Row->ItemType), Amount);
+//    switch (Row->ItemType)
+//    {
+//    case EItemType::Mine:
+//    {
+//        UStatComponent* StatComponent = InWho.GetComponentByClass<UStatComponent>();
+//        checkf(IsValid(StatComponent), TEXT("There is no StatComponent"));
+//
+//        int CurrentHealth = StatComponent->GetInt(ECharacterStatType::Health, 0);
+//        CurrentHealth -= Amount;
+//        StatComponent->SetOrAdd(ECharacterStatType::Health, CurrentHealth);
+//        if (CurrentHealth <= 0)
+//        {
+//            JError("사망을 구현하세요");
+//            return;
+//        }
+//
+//        break;
+//    }
+//
+//
+//    case EItemType::Coin:
+//    {
+//        UIngameGameInstance* GameInstance = Cast<UIngameGameInstance>(GetGameInstance());
+//        checkf(IsValid(GameInstance), TEXT("GameInstnace is not UIngameGameInstance"));
+//
+//        GameInstance->AddScore(Amount);
+//        break;
+//    }
+//
+//    case EItemType::HealthPack:
+//    {
+//        UStatComponent* StatComponent = InWho.GetComponentByClass<UStatComponent>();
+//        checkf(IsValid(StatComponent), TEXT("There is no StatComponent"));
+//
+//        int CurrentHealth = StatComponent->GetInt(ECharacterStatType::Health, 0);
+//        int MaxHealth = StatComponent->GetInt(ECharacterStatType::MaxHealth, 0);
+//
+//        CurrentHealth += Amount;
+//        if (CurrentHealth > MaxHealth)
+//        {
+//            CurrentHealth = MaxHealth;
+//        }
+//
+//        StatComponent->SetOrAdd(ECharacterStatType::Health, CurrentHealth);
+//        break;
+//    }
+//
+//    default:
+//        break;
+//    }
+//
+//    *OutItemType = Row->ItemType;
+//    *OutAmount = Amount;
+//
+//    GetWorld()->DestroyActor(&InItem);
+//}
 
 void AIngameGameMode::SetNextWave()
 {
@@ -85,7 +90,12 @@ void AIngameGameMode::SetNextWave()
     JLog("%d 웨이브 시작!", CurrentWaveIndex + 1);
 
     IngameState->SetStartTime(GetWorld()->TimeSeconds);
-    IngameState->SetCurrentPickUpCount(0);
+    IngameState->SetCurrentPoint(0);
+}
+
+void AIngameGameMode::AddPoint(int InPoint)
+{
+    IngameState->AddCurrentPoint(InPoint);
 }
 
 void AIngameGameMode::BeginPlay()

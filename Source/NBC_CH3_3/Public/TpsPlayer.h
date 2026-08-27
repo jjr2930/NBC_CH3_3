@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "Enums.h"
 #include "TpsPlayer.generated.h"
 
 class UStatComponent;
@@ -41,7 +42,8 @@ public:
         const FHitResult& SweepResult
     );
     
-    
+    UFUNCTION()
+    void OnGatchaAnimationFinished();
 protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "TpsPlayer|Components")
     TObjectPtr<UStatComponent> PlayerStat;
@@ -73,8 +75,15 @@ protected:
     //  Widgets
     ///////////////////////////////////////////////////////
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TpsPlayer|Widgets")
-    TObjectPtr<UGatchaWidget> GatchaWidget;
+    TSubclassOf<UGatchaWidget> GatchaWidget;
 
     TObjectPtr<UGatchaWidget> GatchaWidgetInstance;
+
+
+    ///////////////////////////////////////////////////////
+    //  Rolled Item
+    ///////////////////////////////////////////////////////
+    EItemType CurrentItemType;
+    int CurrentAmount;
 };
 

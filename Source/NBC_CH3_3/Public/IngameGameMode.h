@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
+#include "Enums.h"
 #include "IngameGameMode.generated.h"
 
 class AFieldItem;
@@ -14,8 +15,9 @@ class NBC_CH3_3_API AIngameGameMode : public AGameModeBase
     
 public:
     AIngameGameMode();
-    void PickupFieldItem(const AFieldItem& item, AActor* Who);
+    /*void PickupFieldItem(AFieldItem& item, AActor& Who, EItemType* ItemType, int* Amount);*/
     void SetNextWave();
+    void AddPoint(int InPoint);
 
     virtual void BeginPlay() override;
     virtual void Tick(float DeltaTime) override;
