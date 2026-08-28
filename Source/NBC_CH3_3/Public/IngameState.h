@@ -11,15 +11,15 @@ class NBC_CH3_3_API AIngameState : public AGameStateBase
 
 public:
     void AddCurrentPoint(int InAmount);
-    void SetCurrentPoint(int PickupCount   );
+    void SetCurrentPoint(int PointText   );
     void SetTargetPoint(int Count);
     void SetCurrentWaveIndex(int Value);
     void SetTotalWaveCount(int Value);
     void SetStartTime(float Value);
     void SetRemainTime(float Value);
 
-    int GetCurrentPickUpCount() const; 
-    int GetTotalPickUpCount() const;
+    int GetCurrentPoint() const; 
+    int GetTargetPoint() const;
     int GetCurrentWaveIndex() const;
     int GetTotalWaveCount() const;
     float GetStartTime() const;
@@ -32,7 +32,7 @@ public:
     );
      
     DECLARE_MULTICAST_DELEGATE_TwoParams(
-        FOnPickupCountChanged
+        FOnPointChanged
         , int   //PickupCount
         , int   //totalCount
     );
@@ -44,7 +44,7 @@ public:
     );
 
     FOnRemainingTimeChanged OnRemainTimeChanged;
-    FOnPickupCountChanged OnPickupCountChanged;
+    FOnPointChanged OnPointChanged;
     FOnCurrentWaveIndexChanged OnWaveIndexChanged;
 
 protected:

@@ -4,7 +4,6 @@
 #include <Components/ProgressBar.h>
 #include <Components/TextBlock.h>
 
-
 void UPlayerStatWidget::SetStatComponent(TObjectPtr<UStatComponent> InStatComponent)
 {
     TargetStatComponent = InStatComponent;
@@ -12,6 +11,8 @@ void UPlayerStatWidget::SetStatComponent(TObjectPtr<UStatComponent> InStatCompon
     TargetStatComponent
         ->GetIntCallbacks()
         ->AddUObject(this, &UPlayerStatWidget::OnStatChanged);
+
+    RefreshHealthUi();
 }
 
 void UPlayerStatWidget::OnStatChanged(ECharacterStatType InStatType, int Value)
@@ -38,8 +39,8 @@ void UPlayerStatWidget::OnStatChanged(ECharacterStatType InStatType, int Value)
 
 void UPlayerStatWidget::RefreshHealthUi()
 {
-    int MaxHealth = TargetStatComponent->GetInt(ECharacterStatType::Health);
-    int CurrentHealth = TargetStatComponent->GetInt(ECharacterStatType::MaxHealth);
+    int CurrentHealth = TargetStatComponent->GetInt(ECharacterStatType::Health);
+    int MaxHealth = TargetStatComponent->GetInt(ECharacterStatType::MaxHealth);
     float Percent = (float(CurrentHealth) / (float)MaxHealth);
 
     HealthProgressBar->SetPercent(Percent);

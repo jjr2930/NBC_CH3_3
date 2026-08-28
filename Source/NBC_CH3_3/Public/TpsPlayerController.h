@@ -40,5 +40,5 @@ protected:
 
     //TODO: IngameWidget 안에 넣는게 맞지 않을까?
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TpsPlayerController|UI")
-    TSubclassOf<UPlayerStatWidget> PlayerStatWidget;
+    TSubclassOf<UPlayerStatWidget> StatWidget;
 };

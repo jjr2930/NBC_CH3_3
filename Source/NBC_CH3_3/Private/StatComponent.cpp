@@ -1,8 +1,6 @@
-﻿
-
-
-#include "StatComponent.h"
-
+﻿#include "StatComponent.h"
+#include "JUtility.h"
+#include "Buff.h"
 
 // Sets default values for this component's properties
 UStatComponent::UStatComponent()
@@ -15,14 +13,28 @@ UStatComponent::UStatComponent()
 }
 
 
-void UStatComponent::SetOrAdd(ECharacterStatType statType, int value)
+void UStatComponent::SetOrInsert(ECharacterStatType InStatType, int InValue)
 {
-    IntStats.FindOrAdd(statType, value);
+    JLog("%s, %s, Set to %d",
+        *GetOwner()->GetName()
+        , *StaticEnum<ECharacterStatType>()->GetNameStringByValue((int64)InStatType)
+        , InValue);
+
+    IntStats[InStatType] = InValue;
+  
+    OnIntStatChangedCallbacks.Broadcast(InStatType, InValue);
 }
 
-void UStatComponent::SetOrAdd(ECharacterStatType statType, float Value)
+void UStatComponent::SetOrInsert(ECharacterStatType InStatType, float InValue)
 {
-    FloatStats.FindOrAdd(statType, Value);
+    JLog("%s, %s, Set to %f",
+        *GetOwner()->GetName()
+        , *StaticEnum<ECharacterStatType>()->GetNameStringByValue((int64)InStatType)
+        , InValue);
+
+    FloatStats[InStatType] = InValue;
+
+    OnFloatStatChangedCallbacks.Broadcast(InStatType, InValue);
 }
 
 int UStatComponent::GetInt(ECharacterStatType StatType, int DefaultValue )
@@ -53,14 +65,31 @@ float UStatComponent::GetFloat(ECharacterStatType StatType, float DefaultValue)
     }
 }
 
+bool UStatComponent::HasStat(ECharacterStatType InStatType, bool IsInt)
+{
+    if (IsInt)
+    {
+        return IntStats.Contains(InStatType);
+    }
+    else
+    {
+        return FloatStats.Contains(InStatType);
+    }
+}
+
+void UStatComponent::AddBuff(FBuff* Buff)
+{
+    Buffs.Add(Buff);
+}
+
 UStatComponent::FOnIntStatChangedEvent* UStatComponent::GetIntCallbacks()
 {
-    return &IntStatChangedCallbacks;
+    return &OnIntStatChangedCallbacks;
 }
 
 UStatComponent::FOnFloatStatChangedEvent* UStatComponent::GetFloatCallback()
 {
-    return &FloatStatChangedCallbacks;
+    return &OnFloatStatChangedCallbacks;
 }
 
 // Called when the game starts
@@ -77,7 +106,16 @@ void UStatComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	// ...
+    int Count = Buffs.Num();
+    for (int i = Count - 1; i >= 0; --i)
+    {
+        Buffs[i]->Tick(this);
+        if (Buffs[i]->GetPendingRemoval())
+        {
+            delete Buffs[i];
+            Buffs.RemoveAt(i);
+        }
+    }
 }
 
 

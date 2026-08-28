@@ -18,3 +18,13 @@ float FFieldItemSpawnRow::GetDropRate()
 {
     return DropRate;
 }
+
+EBuffType FFieldItemSpawnRow::GetBuffType()
+{
+    return BuffType;
+}
+
+const FName& FFieldItemSpawnRow::GetTableKey() const
+{
+    return TableKey;
+}

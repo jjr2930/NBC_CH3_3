@@ -1,12 +1,17 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿#include "DurationBuffTableRow.h"
+#include "Buff.h"
 
-
-#include "DurationBuffTableRow.h"
-
-DurationBuffTableRow::DurationBuffTableRow()
+FDurationBuffTableRow::FDurationBuffTableRow()
 {
 }
 
-DurationBuffTableRow::~DurationBuffTableRow()
+FDurationBuffTableRow::~FDurationBuffTableRow()
 {
+}
+
+FBuff* FDurationBuffTableRow::ToBuff()
+{
+    return new FDurationBuff(TargetStat
+        , Operator , IsIntValue , IntValue
+        , FloatValue , Duration, StartTime);
 }

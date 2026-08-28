@@ -11,16 +11,16 @@ void UIngameWidget::SetWaveDuration(float InRemainTime)
 }
 
 
-void UIngameWidget::SetPickupCount(int InPickupCount, int InTargetItemCount)
+void UIngameWidget::SetPoint(int InCurrentPoint, int InTargetPoint)
 {
     FText TextToDisplay = FText::Format(
         FText::FromString(TEXT("{0}/{1}"))
-        , InPickupCount
-        , InTargetItemCount
+        , InCurrentPoint
+        , InTargetPoint
     );
 
-    PickupCount->SetText(TextToDisplay);
-    PickupCountProgressbar->SetPercent((float)InPickupCount / (float)InTargetItemCount);
+    PointText->SetText(TextToDisplay);
+    PointProgressbar->SetPercent((float)InCurrentPoint / (float)InTargetPoint);
 }
 void UIngameWidget::SetWaveText(int InCurrentWaveIndex, int InTotalWaveCount)
 {
@@ -38,16 +38,16 @@ void UIngameWidget::NativeOnInitialized()
     AIngameState* IngameState = Cast<AIngameState>(GetWorld()->GetGameState());
     checkf(IsValid(IngameState), TEXT("Current game stat is not IngameState type"));
 
-    IngameState->OnPickupCountChanged.AddUObject(this, &UIngameWidget::SetPickupCount);
+    IngameState->OnPointChanged.AddUObject(this, &UIngameWidget::SetPoint);
     IngameState->OnRemainTimeChanged.AddUObject(this, &UIngameWidget::SetWaveDuration);
     IngameState->OnWaveIndexChanged.AddUObject(this, &UIngameWidget::SetWaveText);
 
     //처음엔 얻어와서 세팅하자.
-    int CurrentPickupCount = IngameState->GetCurrentPickUpCount();
-    int TargetPoint = IngameState->GetTotalPickUpCount();
+    int CurrentPickupCount = IngameState->GetCurrentPoint();
+    int TargetPoint = IngameState->GetTargetPoint();
     int CurrentWaveIndex = IngameState->GetCurrentWaveIndex();
     int TotalWaveCount = IngameState->GetTotalWaveCount();
 
-    SetPickupCount(CurrentPickupCount, TargetPoint);
+    SetPoint(CurrentPickupCount, TargetPoint);
     SetWaveText(CurrentWaveIndex, TotalWaveCount);
 }

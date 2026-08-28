@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
@@ -17,6 +17,7 @@ public:
 	ASpawnVolume();
     FVector GetRandomPositionInVolume();
 
+    virtual void BeginPlay() override;
     virtual void Tick(float DeltaTime) override;
 
     UFUNCTION()

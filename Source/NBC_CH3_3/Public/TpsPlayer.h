@@ -10,6 +10,9 @@ class UInventoryComponent;
 class USpringArmComponent;
 class UCameraComponent;
 class UGatchaWidget;
+class UDataTable;
+
+struct FBuffTableRowBase;
 struct FInputActionInstance;
 
 UCLASS()
@@ -47,45 +50,53 @@ public:
     UFUNCTION()
     void OnGatchaAnimationFinished();
 protected:
-    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "TpsPlayer|Components")
+    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "====TpsPlayer====|Components")
     TObjectPtr<UStatComponent> PlayerStat;
 
-    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "TpsPlayer|Components")
+    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "====TpsPlayer====|Components")
     TObjectPtr<UInventoryComponent> Inventory;
 
-    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "TpsPlayer|Components")
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "====TpsPlayer====|Components")
     TObjectPtr<USpringArmComponent> SpringArm;
 
-    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "TpsPlayer|Components")
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "====TpsPlayer====|Components")
     TObjectPtr<UCameraComponent> Camera;
 
 
     ///////////////////////////////////////////////////////
     //  Movement
     ///////////////////////////////////////////////////////
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TpsPlayer|Properties")
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "====TpsPlayer====|Properties")
     float RotationSpeed;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TpsPlayer|Properties")
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "====TpsPlayer====|Properties")
     float MoveSpeed;
     
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TpsPlayer|Properties")
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "====TpsPlayer====|Properties")
     bool InversLookY;
 
 
     ///////////////////////////////////////////////////////
     //  Widgets
     ///////////////////////////////////////////////////////
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TpsPlayer|Widgets")
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "====TpsPlayer====|Widgets")
     TSubclassOf<UGatchaWidget> GatchaWidget;
 
+    ///////////////////////////////////////////////////////
+    //  Tables
+    ///////////////////////////////////////////////////////
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "====TpsPlayer====|Tables")
+    TObjectPtr<UDataTable> InstantBuffTable;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "====TpsPlayer====|Tables")
+    TObjectPtr<UDataTable> DurationBuffTable;
+
+
+    ///////////////////////////////////////////////////////
+    //  ETC
+    ///////////////////////////////////////////////////////
+    FBuffTableRowBase* CurrentItemBuff;
+
     TObjectPtr<UGatchaWidget> GatchaWidgetInstance;
-
-
-    ///////////////////////////////////////////////////////
-    //  Rolled Item
-    ///////////////////////////////////////////////////////
-    EItemType CurrentItemType;
-    int CurrentAmount;
 };
 

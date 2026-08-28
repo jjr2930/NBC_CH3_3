@@ -4,20 +4,22 @@
 void AIngameState::AddCurrentPoint(int InAmount)
 {
     CurrentPoint += InAmount;
+
+    OnPointChanged.Broadcast(CurrentPoint, TargetPoint);
 }
 
 void AIngameState::SetCurrentPoint(int InValue)
 {
     this->CurrentPoint = InValue;
 
-    OnPickupCountChanged.Broadcast(CurrentPoint, TargetPoint);
+    OnPointChanged.Broadcast(CurrentPoint, TargetPoint);
 }
 
 void AIngameState::SetTargetPoint(int InValue)
 {
     TargetPoint = InValue;
       
-    OnPickupCountChanged.Broadcast(CurrentPoint, TargetPoint);
+    OnPointChanged.Broadcast(CurrentPoint, TargetPoint);
 }
 
 void AIngameState::SetCurrentWaveIndex(int InValue)
@@ -46,12 +48,12 @@ void AIngameState::SetRemainTime(float InValue)
     OnRemainTimeChanged.Broadcast(RemainTime);
 }
 
-int AIngameState::GetCurrentPickUpCount() const
+int AIngameState::GetCurrentPoint() const
 {
     return CurrentPoint;
 }
 
-int AIngameState::GetTotalPickUpCount() const
+int AIngameState::GetTargetPoint() const
 {
     return TargetPoint;
 }

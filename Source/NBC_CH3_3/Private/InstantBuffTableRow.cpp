@@ -1,12 +1,19 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
+﻿#include "Buff.h"
 #include "InstantBuffTableRow.h"
 
-InstantBuffTableRow::InstantBuffTableRow()
+FBuff* FInstantBuffTableRow::ToBuff()
+{
+    return new FInstantBuff(TargetStat
+        , Operator
+        , IsIntValue
+        , IntValue
+        , FloatValue);
+}
+
+FInstantBuffTableRow::FInstantBuffTableRow()
 {
 }
 
-InstantBuffTableRow::~InstantBuffTableRow()
+FInstantBuffTableRow::~FInstantBuffTableRow()
 {
 }

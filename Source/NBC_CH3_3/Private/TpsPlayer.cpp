@@ -11,12 +11,17 @@
 #include "IngameGameMode.h"
 #include "GatchaWidget.h"
 #include "FieldItemSpawnRow.h"
+#include "DurationBuffTableRow.h"
+#include "BuffTableRowBase.h"
+#include "InstantBuffTableRow.h"
 
 #include "Components/CapsuleComponent.h"
 #include <Camera/CameraComponent.h>
 #include <Blueprint/UserWidget.h>
 
 ATpsPlayer::ATpsPlayer()
+    : CurrentItemBuff(nullptr)
+    , GatchaWidgetInstance(nullptr)
 {
     PlayerStat = CreateDefaultSubobject<UStatComponent>(TEXT("Stat"));
     Inventory = CreateDefaultSubobject<UInventoryComponent>(TEXT("Inventory"));
@@ -118,25 +123,32 @@ void ATpsPlayer::OnComponentBeginOverlap(UPrimitiveComponent* OverlappedComponen
     , bool bFromSweep
     , const FHitResult& SweepResult)
 {
+    JASSERT(IsValid(InstantBuffTable), "InstantBuffTable is invalid or notset");
+    JASSERT(IsValid(DurationBuffTable), "DurationBuffTable is invalid or notset");
+
     AFieldItem* FieldItem = Cast<AFieldItem>(OtherActor);
-    if (!IsValid(FieldItem))
-    {
-        //ignore other case!
-        return;
-    }
+    JASSERT(IsValid(FieldItem), "%s is not FieldItem", *OtherActor->GetName());
 
     AIngameGameMode* GameMode = Cast<AIngameGameMode>(GetWorld()->GetAuthGameMode());
-    checkf(IsValid(GameMode), TEXT("Current game mode is not AIngameGameMode"));
+    JASSERT(IsValid(GameMode), "Current game mode is not AIngameGameMode");
 
-    FFieldItemSpawnRow* Row = FieldItem->Roll();
-    int Amount = Row->RollAmount();
-    EItemType ItemType = Row->GetItemType();
+    FFieldItemSpawnRow* ItemRow = FieldItem->Roll();
+
+    switch (ItemRow->GetBuffType())
+    {
+    case EBuffType::Duration:
+        CurrentItemBuff = DurationBuffTable->FindRow<FDurationBuffTableRow>(ItemRow->GetTableKey(), "Buff finding");
+        break;
+
+    case EBuffType::Instant:
+        CurrentItemBuff = InstantBuffTable->FindRow<FInstantBuffTableRow>(ItemRow->GetTableKey(), "Buff Finding");
+        break;
+    }
 
     UGatchaWidget::FGatchaAnimationFinishedEvent AnimationFinishedCallback;
     AnimationFinishedCallback.BindDynamic(this, &ATpsPlayer::OnGatchaAnimationFinished);
 
-    GatchaWidgetInstance->PlayAnimation(AnimationFinishedCallback);
-    GatchaWidgetInstance->SetItemType(ItemType);
+    GatchaWidgetInstance->SetItemType(ItemRow->GetItemType());
     GatchaWidgetInstance->SetVisibility(ESlateVisibility::Visible);
     GatchaWidgetInstance->PlayAnimation(AnimationFinishedCallback);
 
@@ -147,44 +159,5 @@ void ATpsPlayer::OnGatchaAnimationFinished()
 {
     AIngameGameMode* GameMode = Cast<AIngameGameMode>(GetWorld()->GetAuthGameMode());
 
-    switch (CurrentItemType)
-    {
-    case EItemType::Coin:
-    {
-        GameMode->AddPoint(CurrentAmount);
-        break;
-    }
-
-    case EItemType::HealthPack:
-    {
-        int MaxHealth = PlayerStat->GetInt(ECharacterStatType::MaxHealth, 0);
-        int CurrentHealth = PlayerStat->GetInt(ECharacterStatType::Health, 0);
-        CurrentHealth += CurrentAmount;
-        if (CurrentHealth >= MaxHealth)
-            CurrentHealth = MaxHealth;
-
-        PlayerStat->SetOrAdd(ECharacterStatType::Health, CurrentHealth);
-        break;
-    }
-
-
-    case EItemType::Mine:
-    {
-        int CurrentHealth = PlayerStat->GetInt(ECharacterStatType::Health, 0);
-        CurrentHealth -= CurrentAmount;
-        if (CurrentHealth < 0)
-            CurrentHealth = 0;
-
-        PlayerStat->SetOrAdd(ECharacterStatType::Health, CurrentHealth);
-        if (CurrentHealth == 0)
-        {
-            JLog("사망을 구현하세요");
-        }
-
-        break;
-    }
-
-    default:
-        break;
-    }
+    PlayerStat->AddBuff(CurrentItemBuff->ToBuff());
 }

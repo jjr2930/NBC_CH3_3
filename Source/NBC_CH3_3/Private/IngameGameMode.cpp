@@ -96,6 +96,13 @@ void AIngameGameMode::SetNextWave()
 void AIngameGameMode::AddPoint(int InPoint)
 {
     IngameState->AddCurrentPoint(InPoint);
+    if (IngameState->GetCurrentPoint() >= IngameState->GetTargetPoint())
+    {
+        int CurrentWaveIndex = IngameState->GetCurrentWaveIndex();
+        JLog("%d 웨이브 완료", CurrentWaveIndex + 1);
+
+        SetNextWave();
+    }
 }
 
 void AIngameGameMode::BeginPlay()

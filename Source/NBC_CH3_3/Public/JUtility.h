@@ -38,3 +38,6 @@ if(!Condition) { \
     JError(Format, ##__VA_ARGS__); \
     return false;\
 }
+
+#define GET_ENUM_STRING(EnumType, EnumVariable) \
+StaticEnum<EnumType>()->GetNameStringByValue((int64)EnumVariable)

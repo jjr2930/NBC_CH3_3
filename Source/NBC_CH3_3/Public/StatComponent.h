@@ -1,17 +1,11 @@
-﻿
-
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "Enums.h"
 #include "StatComponent.generated.h"
 
-UENUM(BlueprintType)
-enum class ECharacterStatType : uint8
-{
-    Health      UMETA(DisplayName = "Health"),
-    MaxHealth   UMETA(DisplayName = "Max Health")
-};
+class FBuff;
 
 UCLASS( )
 class NBC_CH3_3_API UStatComponent : public UActorComponent
@@ -27,26 +21,30 @@ public:
     // Called every frame
     virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-    void SetOrAdd(ECharacterStatType statType, int value);
-    void SetOrAdd(ECharacterStatType statType, float value);
+    void SetOrInsert(ECharacterStatType statType, int value);
+    void SetOrInsert(ECharacterStatType statType, float value);
     int GetInt(ECharacterStatType statType, int defaultValue = 0);
     float GetFloat(ECharacterStatType statType, float defaultValue = 0);
+    bool HasStat(ECharacterStatType InStatType, bool IsInt);
 
+    void AddBuff(FBuff* Buff);
+    
     FOnIntStatChangedEvent* GetIntCallbacks();
     FOnFloatStatChangedEvent* GetFloatCallback();
-
 
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
     
 protected:
-    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Stats")
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Stats")
     TMap<ECharacterStatType, int> IntStats;
 
-    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Stats")
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Stats")
     TMap<ECharacterStatType, float> FloatStats;
 
-    FOnIntStatChangedEvent IntStatChangedCallbacks;
-    FOnFloatStatChangedEvent FloatStatChangedCallbacks;
+    TArray<FBuff*> Buffs;
+
+    FOnIntStatChangedEvent OnIntStatChangedCallbacks;
+    FOnFloatStatChangedEvent OnFloatStatChangedCallbacks;
 };

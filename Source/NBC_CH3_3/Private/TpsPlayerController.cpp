@@ -47,10 +47,11 @@ void ATpsPlayerController::BeginPlay()
 
     TObjectPtr<UIngameWidget> WidgetInstance = CreateWidget<UIngameWidget>(GetWorld(), IngameWidget);
     WidgetInstance->AddToViewport(0);
-    JASSERT(IsValid(PlayerStatWidget), "Player stat widget is inavlid");
+    JASSERT(IsValid(StatWidget), "Player stat widget is inavlid");
 
-    TObjectPtr<UPlayerStatWidget> StatWidgetInstance = CreateWidget<UPlayerStatWidget>(GetWorld(), IngameWidget);
-    
+    TObjectPtr<UPlayerStatWidget> StatWidgetInstance = CreateWidget<UPlayerStatWidget>(GetWorld(), StatWidget);
+    StatWidgetInstance->AddToViewport(0);
+
     ATpsPlayer* TpsPlayer = Cast<ATpsPlayer>(GetPawn());
     JASSERT(IsValid(TpsPlayer), "Player is not ATpsPlayer");
     

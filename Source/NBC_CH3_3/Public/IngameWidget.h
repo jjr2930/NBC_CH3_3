@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -16,7 +16,7 @@ class NBC_CH3_3_API UIngameWidget : public UUserWidget
 
 public:
     void SetWaveDuration(float InRemainTime);
-    void SetPickupCount(int InPickupItemCount, int InTargetItemCount);
+    void SetPoint(int InCurrentPoint, int InTargetPoint);
     void SetWaveText(int InCurrentWaveIndex, int InTotalWaveCount);
 
 protected:
@@ -27,10 +27,10 @@ protected:
     TObjectPtr<UTextBlock> TimeText;
 
     UPROPERTY(meta = (BindWidget))
-    TObjectPtr<UProgressBar> PickupCountProgressbar;
+    TObjectPtr<UProgressBar> PointProgressbar;
 
     UPROPERTY(meta = (BindWidget))
-    TObjectPtr<UTextBlock> PickupCount;
+    TObjectPtr<UTextBlock> PointText;
 
     UPROPERTY(meta = (BindWidget))
     TObjectPtr<UTextBlock> WaveText;

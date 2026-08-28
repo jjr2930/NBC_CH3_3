@@ -1,15 +1,18 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
+#include "BuffTableRowBase.h"
+#include "InstantBuffTableRow.generated.h"
 
-/**
- * 
- */
-class NBC_CH3_3_API InstantBuffTableRow
+class FBuff;
+
+USTRUCT(BlueprintType)
+struct NBC_CH3_3_API FInstantBuffTableRow : public FBuffTableRowBase
 {
+    GENERATED_BODY();
+
+    virtual FBuff* ToBuff() override;
 public:
-	InstantBuffTableRow();
-	~InstantBuffTableRow();
+	FInstantBuffTableRow();
+	~FInstantBuffTableRow();
 };

@@ -1,4 +1,4 @@
-#include "SpawnVolume.h"
+﻿#include "SpawnVolume.h"
 #include "Components/BoxComponent.h"
 
 // Sets default values
@@ -19,9 +19,18 @@ FVector ASpawnVolume::GetRandomPositionInVolume()
     return RandomWorldPosition;
 }
 
+void ASpawnVolume::BeginPlay()
+{
+    Super::BeginPlay();
+
+    Spawn();
+    LastSpawnTime = (float)(GetWorld()->GetTimeSeconds());
+}
 
 void ASpawnVolume::Tick(float DeltaTime)
 {
+    Super::Tick(DeltaTime);
+
     double Now = (float)(GetWorld()->GetTimeSeconds());
     if (Now - LastSpawnTime >= SpawnDelay)
     {
