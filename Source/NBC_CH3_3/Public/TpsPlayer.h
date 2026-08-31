@@ -95,7 +95,8 @@ protected:
     ///////////////////////////////////////////////////////
     //  ETC
     ///////////////////////////////////////////////////////
-    FBuffTableRowBase* CurrentItemBuff;
+    FString CurrentItemKey;
+    EItemType ItemType;
 
     TObjectPtr<UGatchaWidget> GatchaWidgetInstance;
 };

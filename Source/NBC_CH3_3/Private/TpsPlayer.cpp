@@ -18,6 +18,7 @@
 #include "Components/CapsuleComponent.h"
 #include <Camera/CameraComponent.h>
 #include <Blueprint/UserWidget.h>
+#include <Kismet/GameplayStatics.h>
 
 ATpsPlayer::ATpsPlayer()
     : CurrentItemBuff(nullptr)
@@ -153,6 +154,8 @@ void ATpsPlayer::OnComponentBeginOverlap(UPrimitiveComponent* OverlappedComponen
     GatchaWidgetInstance->PlayAnimation(AnimationFinishedCallback);
 
     GetWorld()->DestroyActor(FieldItem);
+
+    Inventory->GetOwner()
 }
 
 void ATpsPlayer::OnGatchaAnimationFinished()

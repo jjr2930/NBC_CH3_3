@@ -1,5 +1,5 @@
-#include "ItemDataRow.h"
+﻿#include "ItemDataRow.h"
 
-FItemDataRow::FItemDataRow()
+FItemDataRowBase::FItemDataRowBase()
 {
 }

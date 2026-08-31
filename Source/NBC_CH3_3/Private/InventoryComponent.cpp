@@ -1,4 +1,4 @@
-#include "InventoryComponent.h"
+﻿#include "InventoryComponent.h"
 #include "ItemDataRow.h"
 #include "Engine/Engine.h"
 #include "JUtility.h"
@@ -41,7 +41,7 @@ void UInventoryComponent::AddItem(int TableKey, int amount)
     }
 
     int FoundIndex = -1;
-    TArray<FItemDataRow*> AllRows;
+    TArray<FItemDataRowBase*> AllRows;
     ItemTable->GetAllRows(FString("Inventory"), AllRows);
 
     if (AllRows.IsEmpty())
@@ -50,15 +50,7 @@ void UInventoryComponent::AddItem(int TableKey, int amount)
         return;
     }
 
-    for (auto iter : AllRows)
-    {
-        //like gear...
-        if(iter->Key == TableKey && !iter->IsStackable)
-        {
-            Items.Add({ TableKey, amount });
-            return;
-        }
-    }
+    JError("Implement this section");
 
     if (TryGetItem(TableKey, &FoundIndex))
     {

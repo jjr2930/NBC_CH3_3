@@ -1,5 +1,5 @@
-﻿#include "Buff.h"
-#include "InstantBuffTableRow.h"
+﻿#include "InstantBuffTableRow.h"
+#include "Buff.h"
 
 FBuff* FInstantBuffTableRow::ToBuff()
 {
