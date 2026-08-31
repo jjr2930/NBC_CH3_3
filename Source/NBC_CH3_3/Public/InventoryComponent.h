@@ -1,6 +1,6 @@
-#pragma once
+﻿#pragma once
 
-
+#include "Enums.h"
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
 #include "InventoryComponent.generated.h"
@@ -14,34 +14,30 @@ struct NBC_CH3_3_API FInventoryItemData
 
 public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "InventoryItemData")
-    int TableKey;
+    FName TableKey;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "InventoryItemData")
+    EItemType ItemType;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "InventoryItemData")
     int StackCount;
 };
 
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+UCLASS( )
 class NBC_CH3_3_API UInventoryComponent : public UActorComponent
 {
 	GENERATED_BODY()
+public:
+    void AddItem(EItemType InItemType, FName& InTableKey, int amount);
+    void RemoveItem(EItemType InItemType, FName& InTableKey, int amount);
+    bool TryGetItem(EItemType InItemType, FName& TableKey, int* OutFound);
 
-public:	
-	// Sets default values for this component's properties
-	UInventoryComponent();
-
-protected:
-	// Called when the game starts
-	virtual void BeginPlay() override;
-
-public:	
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-    void AddItem(int TableKey, int amount);
-    void RemoveItem(int TableKey, int amount);
-    bool TryGetItem(int TableKey, int* OutFound);
 protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
-    TObjectPtr<UDataTable> ItemTable;
+    TObjectPtr<UDataTable> ConsumeItemTable;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
+    TObjectPtr<UDataTable> QuestItemTable;
 
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Inventory")
     TArray<FInventoryItemData> Items;

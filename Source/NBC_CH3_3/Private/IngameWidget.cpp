@@ -38,16 +38,16 @@ void UIngameWidget::NativeOnInitialized()
     AIngameState* IngameState = Cast<AIngameState>(GetWorld()->GetGameState());
     checkf(IsValid(IngameState), TEXT("Current game stat is not IngameState type"));
 
-    IngameState->OnPointChanged.AddUObject(this, &UIngameWidget::SetPoint);
+    IngameState->OnCoinCountChanged.AddUObject(this, &UIngameWidget::SetPoint);
     IngameState->OnRemainTimeChanged.AddUObject(this, &UIngameWidget::SetWaveDuration);
     IngameState->OnWaveIndexChanged.AddUObject(this, &UIngameWidget::SetWaveText);
 
     //처음엔 얻어와서 세팅하자.
-    int CurrentPickupCount = IngameState->GetCurrentPoint();
-    int TargetPoint = IngameState->GetTargetPoint();
+    int CurrentPickupCount = IngameState->GetCurrentCoinCount();
+    int TargetCoinCount = IngameState->GetTargetCoinCount();
     int CurrentWaveIndex = IngameState->GetCurrentWaveIndex();
     int TotalWaveCount = IngameState->GetTotalWaveCount();
 
-    SetPoint(CurrentPickupCount, TargetPoint);
+    SetPoint(CurrentPickupCount, TargetCoinCount);
     SetWaveText(CurrentWaveIndex, TotalWaveCount);
 }

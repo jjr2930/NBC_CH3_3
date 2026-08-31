@@ -33,5 +33,5 @@ protected:
     TObjectPtr<UStaticMeshComponent> StaticMesh;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Field Items|Properties")
-    TObjectPtr<UDataTable> ItemDropTable;
+    TObjectPtr<UDataTable> FieldItemTable;
 };

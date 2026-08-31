@@ -14,6 +14,8 @@
 #include "DurationBuffTableRow.h"
 #include "BuffTableRowBase.h"
 #include "InstantBuffTableRow.h"
+#include "QuestItemTableRow.h"
+#include "ConsumeItemTableRow.h"
 
 #include "Components/CapsuleComponent.h"
 #include <Camera/CameraComponent.h>
@@ -21,8 +23,7 @@
 #include <Kismet/GameplayStatics.h>
 
 ATpsPlayer::ATpsPlayer()
-    : CurrentItemBuff(nullptr)
-    , GatchaWidgetInstance(nullptr)
+    : GatchaWidgetInstance(nullptr)
 {
     PlayerStat = CreateDefaultSubobject<UStatComponent>(TEXT("Stat"));
     Inventory = CreateDefaultSubobject<UInventoryComponent>(TEXT("Inventory"));
@@ -133,34 +134,64 @@ void ATpsPlayer::OnComponentBeginOverlap(UPrimitiveComponent* OverlappedComponen
     AIngameGameMode* GameMode = Cast<AIngameGameMode>(GetWorld()->GetAuthGameMode());
     JASSERT(IsValid(GameMode), "Current game mode is not AIngameGameMode");
 
-    FFieldItemSpawnRow* ItemRow = FieldItem->Roll();
-
-    switch (ItemRow->GetBuffType())
-    {
-    case EBuffType::Duration:
-        CurrentItemBuff = DurationBuffTable->FindRow<FDurationBuffTableRow>(ItemRow->GetTableKey(), "Buff finding");
-        break;
-
-    case EBuffType::Instant:
-        CurrentItemBuff = InstantBuffTable->FindRow<FInstantBuffTableRow>(ItemRow->GetTableKey(), "Buff Finding");
-        break;
-    }
+    FFieldItemSpawnRow* FieldItemTableRow = FieldItem->Roll();
+    CurrentItemKey = FieldItemTableRow->GetTableKey();
+    CurrentItemType = FieldItemTableRow->GetItemType();
+    CurrentAmount = FieldItemTableRow->RollAmount();
 
     UGatchaWidget::FGatchaAnimationFinishedEvent AnimationFinishedCallback;
     AnimationFinishedCallback.BindDynamic(this, &ATpsPlayer::OnGatchaAnimationFinished);
 
-    GatchaWidgetInstance->SetItemType(ItemRow->GetItemType());
+    GatchaWidgetInstance->SetIcon(FieldItemTableRow->GetIconTexture());
     GatchaWidgetInstance->SetVisibility(ESlateVisibility::Visible);
     GatchaWidgetInstance->PlayAnimation(AnimationFinishedCallback);
 
     GetWorld()->DestroyActor(FieldItem);
-
-    Inventory->GetOwner()
 }
 
 void ATpsPlayer::OnGatchaAnimationFinished()
 {
     AIngameGameMode* GameMode = Cast<AIngameGameMode>(GetWorld()->GetAuthGameMode());
+    switch (CurrentItemType)
+    {
+    case EItemType::QuestItem:
+    {
+        FQuestItemTableRow* QuestItemRow = QuestItemTable->FindRow<FQuestItemTableRow>(CurrentItemKey, TEXT("TPS Player"));
+        JASSERT((nullptr != QuestItemRow), "Item row is not quest item row");
 
-    PlayerStat->AddBuff(CurrentItemBuff->ToBuff());
+        Inventory->AddItem(CurrentItemType, CurrentItemKey, CurrentAmount);
+
+        JLog("%s %d added", *QuestItemRow->ItemDisplayName, CurrentAmount);
+        break;
+    }
+    case EItemType::ConsumeItem:
+    {
+        FConsumeItemTableRow* ConsumeItemRow = ConsumeItemTable->FindRow<FConsumeItemTableRow>(CurrentItemKey, TEXT("Tps Player"));
+
+        JASSERT((nullptr != ConsumeItemRow), "Itemr ow is not consumeitem row");
+
+        switch (ConsumeItemRow->BuffType)
+        {
+        case EBuffType::Duration:
+        {
+            FDurationBuffTableRow* DurationBuffRow = DurationBuffTable->FindRow<FDurationBuffTableRow>(ConsumeItemRow->BuffRowName, TEXT("TpsPlayer"));
+            PlayerStat->AddBuff(DurationBuffRow->ToBuff());
+            break;
+        }
+
+        case EBuffType::Instant:
+        {
+            FInstantBuffTableRow* InstnatBuffRow = InstantBuffTable->FindRow<FInstantBuffTableRow>(ConsumeItemRow->BuffRowName, TEXT("TpsPlayer"));
+
+            FBuff* Buff = InstnatBuffRow->ToBuff();
+            PlayerStat->AddBuff(Buff);
+            break;
+        }
+        }
+        break;
+    }
+
+    default:
+        break;
+    }
 }

@@ -19,8 +19,8 @@ public:
     int RollAmount();
     EItemType GetItemType();
     float GetDropRate();
-    EBuffType GetBuffType();
     const FName& GetTableKey() const;
+    TObjectPtr<UTexture2D> GetIconTexture();
 
 protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "===FIELD ITEM===")
@@ -36,7 +36,7 @@ protected:
     float DropRate;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "===FIELD ITEM===")
-    EBuffType BuffType;
+    TObjectPtr<UTexture2D> IconTexture;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "===FIELD ITEM===")
     FName TableKey;

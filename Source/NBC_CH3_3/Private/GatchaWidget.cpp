@@ -31,15 +31,7 @@ void UGatchaWidget::PlayAnimation(FGatchaAnimationFinishedEvent Callback)
     Super::PlayAnimation(GatchaAnimation);
 }
 
-void UGatchaWidget::SetItemType(EItemType ItemType)
-{
-    JASSERT(Textures.Contains(ItemType)
-        , "Texture is not exist, ItemType:%s"
-        , *StaticEnum<EItemType>()->GetNameStringByValue((uint64)ItemType));
-
-    JASSERT(IsValid(Textures[ItemType])
-        , "Key(%s) exist but texture is not exist"
-        , *StaticEnum<EItemType>()->GetNameStringByValue((uint64)ItemType));
-
-    ItemIcon->SetBrushFromTexture(Textures[ItemType]);
+void UGatchaWidget::SetIcon(TObjectPtr<UTexture2D> InTexture)
+{    
+    ItemIcon->SetBrushFromTexture(InTexture);
 }

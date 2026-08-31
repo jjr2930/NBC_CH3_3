@@ -7,6 +7,7 @@
 
 class AFieldItem;
 class AIngameState;
+struct FInventoryItemData;
 
 UCLASS()
 class NBC_CH3_3_API AIngameGameMode : public AGameModeBase
@@ -17,7 +18,7 @@ public:
     AIngameGameMode();
     /*void PickupFieldItem(AFieldItem& item, AActor& Who, EItemType* ItemType, int* Amount);*/
     void SetNextWave();
-    void AddPoint(int InPoint);
+    void OnItemAdded(const FInventoryItemData& AddedItem);
 
     virtual void BeginPlay() override;
     virtual void Tick(float DeltaTime) override;

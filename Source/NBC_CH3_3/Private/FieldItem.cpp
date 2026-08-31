@@ -40,11 +40,11 @@ void AFieldItem::EndPlay(EEndPlayReason::Type Reason)
 
 FFieldItemSpawnRow* AFieldItem::Roll() const
 {
-    checkf(IsValid(ItemDropTable), TEXT("Table is not set"));
+    JASSERT_NULLPTR(IsValid(FieldItemTable), "Table is not set");
 
     //roll item drop table!
     TArray<FFieldItemSpawnRow*> SpawnRows;
-    ItemDropTable->GetAllRows<FFieldItemSpawnRow>(FString(TEXT("Field Item Spawn Volume")), SpawnRows);
+    FieldItemTable->GetAllRows<FFieldItemSpawnRow>(FString(TEXT("Field Item Spawn Volume")), SpawnRows);
     checkf(SpawnRows.Num() > 0, TEXT("Empty DataTable"));
 
     float TotalRate = 0;

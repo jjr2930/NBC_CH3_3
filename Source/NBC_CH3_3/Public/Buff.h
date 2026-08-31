@@ -14,6 +14,7 @@ public:
     FBuff(ECharacterStatType InTargetStat, EStatOperatorType InOperator, bool InIsIntValue, int InIntValue, float InFloatValue)
         : TargetStat(InTargetStat)
         , Operator(InOperator)
+        , IsIntValue(InIsIntValue)
         , IntValue(InIntValue)
         , FloatValue(InFloatValue)
     {
@@ -64,11 +65,10 @@ public:
 
     void TickInt(UStatComponent* StatComponent)
     {
-        JASSERT(StatComponent->HasStat(TargetStat, IsIntValue)
-            , "%s is not have %s"
+        JASSERT(StatComponent->HasStat(TargetStat, IsIntValue),
+            "%s does not have stat(%s)"
             , *StatComponent->GetOwner()->GetName()
-            , *GET_ENUM_STRING(ECharacterStatType, TargetStat) 
-        )
+            , *GET_ENUM_STRING(ECharacterStatType, TargetStat));
 
         int CurrentValue = StatComponent->GetInt(TargetStat);
         switch (Operator)
@@ -76,7 +76,7 @@ public:
 
             case EStatOperatorType::Add:
                 CurrentValue += IntValue;
-            break;
+                break;
 
             case EStatOperatorType::Subtract:
                 CurrentValue -= IntValue;
@@ -95,6 +95,8 @@ public:
                 break;
             }
         }
+
+        StatComponent->SetOrInsert(TargetStat, CurrentValue);
     }
 
     void TickFloat(UStatComponent* StatComponent)

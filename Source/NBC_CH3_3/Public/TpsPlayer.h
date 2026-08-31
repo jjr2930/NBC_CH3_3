@@ -12,6 +12,7 @@ class UCameraComponent;
 class UGatchaWidget;
 class UDataTable;
 
+struct FItemTableRowBase;
 struct FBuffTableRowBase;
 struct FInputActionInstance;
 
@@ -50,10 +51,10 @@ public:
     UFUNCTION()
     void OnGatchaAnimationFinished();
 protected:
-    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "====TpsPlayer====|Components")
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "====TpsPlayer====|Components")
     TObjectPtr<UStatComponent> PlayerStat;
 
-    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "====TpsPlayer====|Components")
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "====TpsPlayer====|Components")
     TObjectPtr<UInventoryComponent> Inventory;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "====TpsPlayer====|Components")
@@ -85,12 +86,6 @@ protected:
     ///////////////////////////////////////////////////////
     //  Tables
     ///////////////////////////////////////////////////////
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "====TpsPlayer====|Tables")
-    TObjectPtr<UDataTable> ConsumeItemTable;
-    
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "====TpsPlayer====|Tables")
-    TObjectPtr<UDataTable> ConsumeItemTable;
-
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "====TpsPlayer====|Tables")
     TObjectPtr<UDataTable> InstantBuffTable;
@@ -98,12 +93,17 @@ protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "====TpsPlayer====|Tables")
     TObjectPtr<UDataTable> DurationBuffTable;
 
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "====TpsPlayer====|Tables")
+    TObjectPtr<UDataTable> ConsumeItemTable;
 
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "====TpsPlayer====|Tables")
+    TObjectPtr<UDataTable> QuestItemTable;
     ///////////////////////////////////////////////////////
     //  ETC
     ///////////////////////////////////////////////////////
-    FString CurrentItemKey;
-    EItemType ItemType;
+    FName CurrentItemKey;
+    EItemType CurrentItemType;
+    int CurrentAmount = 0;
 
     TObjectPtr<UGatchaWidget> GatchaWidgetInstance;
 };

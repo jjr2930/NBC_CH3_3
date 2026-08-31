@@ -20,7 +20,7 @@ public:
 public:
     virtual void NativeOnInitialized() override;
     void PlayAnimation(FGatchaAnimationFinishedEvent Callback);
-    void SetItemType(EItemType ItemType);
+    void SetIcon(TObjectPtr<UTexture2D> InTexture);
 
 protected:
     UFUNCTION()
@@ -29,10 +29,7 @@ protected:
     //member fields
 protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Gatcha|Properties")
-    TObjectPtr<UDataTable> ItemDropTable;
-
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Gatcha|Properties")
-    TMap<EItemType, TObjectPtr<UTexture2D>> Textures;
+    TObjectPtr<UDataTable> FieldItemTable;
 
     UPROPERTY(meta = (BindWidget))
     TObjectPtr<UImage> ItemIcon;

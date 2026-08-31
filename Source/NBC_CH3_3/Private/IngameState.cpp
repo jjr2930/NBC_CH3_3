@@ -1,25 +1,25 @@
 ﻿#include "IngameState.h"
 
 
-void AIngameState::AddCurrentPoint(int InAmount)
+void AIngameState::SetCurrentCoinAmount(int InAmount)
 {
-    CurrentPoint += InAmount;
+    CurrentCoinCount = InAmount;
 
-    OnPointChanged.Broadcast(CurrentPoint, TargetPoint);
+    OnCoinCountChanged.Broadcast(CurrentCoinCount, TargetCoinCount);
 }
 
 void AIngameState::SetCurrentPoint(int InValue)
 {
-    this->CurrentPoint = InValue;
+    this->CurrentCoinCount = InValue;
 
-    OnPointChanged.Broadcast(CurrentPoint, TargetPoint);
+    OnCoinCountChanged.Broadcast(CurrentCoinCount, TargetCoinCount);
 }
 
-void AIngameState::SetTargetPoint(int InValue)
+void AIngameState::SetTargetCoinCount(int InValue)
 {
-    TargetPoint = InValue;
+    TargetCoinCount = InValue;
       
-    OnPointChanged.Broadcast(CurrentPoint, TargetPoint);
+    OnCoinCountChanged.Broadcast(CurrentCoinCount, TargetCoinCount);
 }
 
 void AIngameState::SetCurrentWaveIndex(int InValue)
@@ -48,14 +48,14 @@ void AIngameState::SetRemainTime(float InValue)
     OnRemainTimeChanged.Broadcast(RemainTime);
 }
 
-int AIngameState::GetCurrentPoint() const
+int AIngameState::GetCurrentCoinCount() const
 {
-    return CurrentPoint;
+    return CurrentCoinCount;
 }
 
-int AIngameState::GetTargetPoint() const
+int AIngameState::GetTargetCoinCount() const
 {
-    return TargetPoint;
+    return TargetCoinCount;
 }
 
 int AIngameState::GetCurrentWaveIndex() const

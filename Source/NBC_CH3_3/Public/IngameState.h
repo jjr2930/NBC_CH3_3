@@ -10,16 +10,16 @@ class NBC_CH3_3_API AIngameState : public AGameStateBase
 	GENERATED_BODY()
 
 public:
-    void AddCurrentPoint(int InAmount);
+    void SetCurrentCoinAmount(int InAmount);
     void SetCurrentPoint(int PointText   );
-    void SetTargetPoint(int Count);
+    void SetTargetCoinCount(int Count);
     void SetCurrentWaveIndex(int Value);
     void SetTotalWaveCount(int Value);
     void SetStartTime(float Value);
     void SetRemainTime(float Value);
 
-    int GetCurrentPoint() const; 
-    int GetTargetPoint() const;
+    int GetCurrentCoinCount() const; 
+    int GetTargetCoinCount() const;
     int GetCurrentWaveIndex() const;
     int GetTotalWaveCount() const;
     float GetStartTime() const;
@@ -32,7 +32,7 @@ public:
     );
      
     DECLARE_MULTICAST_DELEGATE_TwoParams(
-        FOnPointChanged
+        FCoinCountChanged
         , int   //PickupCount
         , int   //totalCount
     );
@@ -44,15 +44,15 @@ public:
     );
 
     FOnRemainingTimeChanged OnRemainTimeChanged;
-    FOnPointChanged OnPointChanged;
+    FCoinCountChanged OnCoinCountChanged;
     FOnCurrentWaveIndexChanged OnWaveIndexChanged;
 
 protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "IngameState|Properties")
-    int CurrentPoint;
+    int CurrentCoinCount;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "IngameState|Properties")
-    int TargetPoint;
+    int TargetCoinCount;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "IngameState|Properties")
     float WaveDuration;

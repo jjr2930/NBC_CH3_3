@@ -22,7 +22,7 @@ if(GEngine) { \
  
 
 #define JASSERT(Condition, Format, ...) \
-if(!Condition) { \
+if(!(Condition)) { \
     JError(Format, ##__VA_ARGS__); \
     return; \
 }
@@ -37,6 +37,12 @@ if(!Condition) { \
 if(!Condition) { \
     JError(Format, ##__VA_ARGS__); \
     return false;\
+}
+
+#define JASSERT_NULLPTR(Condition, Format, ...) \
+if(!Condition) { \
+    JError(Format, ##__VA_ARGS__); \
+    return nullptr;\
 }
 
 #define GET_ENUM_STRING(EnumType, EnumVariable) \

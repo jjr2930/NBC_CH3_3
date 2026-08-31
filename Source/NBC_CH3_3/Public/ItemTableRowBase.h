@@ -16,4 +16,7 @@ public:
 public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString ItemDisplayName;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    bool IsStackable;
 };

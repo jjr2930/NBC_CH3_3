@@ -3,11 +3,13 @@
 
 FBuff* FInstantBuffTableRow::ToBuff()
 {
-    return new FInstantBuff(TargetStat
+    FBuff* NewBuff = new FInstantBuff(TargetStat
         , Operator
         , IsIntValue
         , IntValue
         , FloatValue);
+
+    return NewBuff;
 }
 
 FInstantBuffTableRow::FInstantBuffTableRow()

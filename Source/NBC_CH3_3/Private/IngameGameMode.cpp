@@ -6,7 +6,8 @@
 #include "IngameState.h"
 #include "StatComponent.h"
 #include "IngameGameInstance.h"
-
+#include "InventoryComponent.h"
+#include "Enums.h"
 #include "FieldItemSpawnRow.h"
 
 AIngameGameMode::AIngameGameMode()
@@ -17,71 +18,6 @@ AIngameGameMode::AIngameGameMode()
     PrimaryActorTick.bCanEverTick = true;
 }
 
-//void AIngameGameMode::PickupFieldItem(AFieldItem& InItem, AActor& InWho, EItemType* OutItemType, int* OutAmount)
-//{
-//    checkf(IsValid(&InItem), TEXT("Item is not valiud"));
-//    checkf(IsValid(IngameState), TEXT("Current game state is not IngameState"));
-//
-//    FFieldItemSpawnRow* Row = InItem.Roll();
-//    int Amount = Row->RollAmount();
-//
-//    JLog("%s %d 획득", *UEnum::GetValueAsString(Row->ItemType), Amount);
-//    switch (Row->ItemType)
-//    {
-//    case EItemType::Mine:
-//    {
-//        UStatComponent* StatComponent = InWho.GetComponentByClass<UStatComponent>();
-//        checkf(IsValid(StatComponent), TEXT("There is no StatComponent"));
-//
-//        int CurrentHealth = StatComponent->GetInt(ECharacterStatType::Health, 0);
-//        CurrentHealth -= Amount;
-//        StatComponent->SetOrAdd(ECharacterStatType::Health, CurrentHealth);
-//        if (CurrentHealth <= 0)
-//        {
-//            JError("사망을 구현하세요");
-//            return;
-//        }
-//
-//        break;
-//    }
-//
-//
-//    case EItemType::Coin:
-//    {
-//        UIngameGameInstance* GameInstance = Cast<UIngameGameInstance>(GetGameInstance());
-//        checkf(IsValid(GameInstance), TEXT("GameInstnace is not UIngameGameInstance"));
-//
-//        GameInstance->AddScore(Amount);
-//        break;
-//    }
-//
-//    case EItemType::HealthPack:
-//    {
-//        UStatComponent* StatComponent = InWho.GetComponentByClass<UStatComponent>();
-//        checkf(IsValid(StatComponent), TEXT("There is no StatComponent"));
-//
-//        int CurrentHealth = StatComponent->GetInt(ECharacterStatType::Health, 0);
-//        int MaxHealth = StatComponent->GetInt(ECharacterStatType::MaxHealth, 0);
-//
-//        CurrentHealth += Amount;
-//        if (CurrentHealth > MaxHealth)
-//        {
-//            CurrentHealth = MaxHealth;
-//        }
-//
-//        StatComponent->SetOrAdd(ECharacterStatType::Health, CurrentHealth);
-//        break;
-//    }
-//
-//    default:
-//        break;
-//    }
-//
-//    *OutItemType = Row->ItemType;
-//    *OutAmount = Amount;
-//
-//    GetWorld()->DestroyActor(&InItem);
-//}
 
 void AIngameGameMode::SetNextWave()
 {
@@ -93,15 +29,19 @@ void AIngameGameMode::SetNextWave()
     IngameState->SetCurrentPoint(0);
 }
 
-void AIngameGameMode::AddPoint(int InPoint)
-{
-    IngameState->AddCurrentPoint(InPoint);
-    if (IngameState->GetCurrentPoint() >= IngameState->GetTargetPoint())
-    {
-        int CurrentWaveIndex = IngameState->GetCurrentWaveIndex();
-        JLog("%d 웨이브 완료", CurrentWaveIndex + 1);
 
-        SetNextWave();
+void AIngameGameMode::OnItemAdded(const FInventoryItemData& AddedItem)
+{
+    if (AddedItem.ItemType == EItemType::QuestItem)
+    {
+        IngameState->SetCurrentCoinAmount(AddedItem.StackCount);
+        if (IngameState->GetCurrentCoinCount() >= IngameState->GetTargetCoinCount())
+        {
+            int CurrentWaveIndex = IngameState->GetCurrentWaveIndex();
+            JLog("%d 웨이브 완료", CurrentWaveIndex + 1);
+
+            SetNextWave();
+        }
     }
 }
 
