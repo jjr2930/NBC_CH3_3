@@ -86,6 +86,13 @@ protected:
     //  Tables
     ///////////////////////////////////////////////////////
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "====TpsPlayer====|Tables")
+    TObjectPtr<UDataTable> ConsumeItemTable;
+    
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "====TpsPlayer====|Tables")
+    TObjectPtr<UDataTable> ConsumeItemTable;
+
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "====TpsPlayer====|Tables")
     TObjectPtr<UDataTable> InstantBuffTable;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "====TpsPlayer====|Tables")

@@ -5,11 +5,15 @@
 #include "ItemTableRowBase.generated.h"
 
 USTRUCT(BlueprintType)
-class NBC_CH3_3_API ItemTableRowBase
+struct NBC_CH3_3_API FItemTableRowBase : public FTableRowBase
 {
     GENERATED_BODY();
 
 public:
-	ItemTableRowBase();
-	~ItemTableRowBase();
+	FItemTableRowBase();
+	~FItemTableRowBase();
+
+public:
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    FString ItemDisplayName;
 };

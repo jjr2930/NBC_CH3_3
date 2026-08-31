@@ -1,5 +1,6 @@
 ﻿#include "ItemBank.h"
-
+#include "QuestItemTableRow.h"
+#include "ConsumeItemTableRow.h"
 
 // Sets default values
 AItemBank::AItemBank()
@@ -9,18 +10,17 @@ AItemBank::AItemBank()
 
 }
 
-// Called when the game starts or when spawned
-void AItemBank::BeginPlay()
+FItemTableRowBase* AItemBank::GetItemRow(EItemType ItemType, const FName& Key)
 {
-	Super::BeginPlay();
-	
+    switch (ItemType)
+    {
+    case EItemType::QuestItem:
+        return Cast<FItemTableRowBase>(QuestItemTable->FindRow<FQuestItemTableRow>(Key, "ItemBank"));
+        
+    case EItemType::ConsumeItem:
+        return Cast<FItemTableRowBase>(ConsumeItemTable->FindRow<FConsumeItemTableRow>(Key, "ItemBank"));
+
+    default:
+        break;
+    }
 }
-
-// Called every frame
-void AItemBank::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-}
-
-

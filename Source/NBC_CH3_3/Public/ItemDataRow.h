@@ -6,7 +6,7 @@
 #include "ItemDataRow.generated.h"
 
 USTRUCT(BlueprintType)
-struct NBC_CH3_3_API FItemDataRowBase : public FTableRowBase
+struct NBC_CH3_3_API FItemDataRowBase: public FTableRowBase
 {
     GENERATED_BODY()
 
