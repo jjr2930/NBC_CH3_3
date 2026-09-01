@@ -11,7 +11,7 @@ class NBC_CH3_3_API AIngameState : public AGameStateBase
 
 public:
     void SetCurrentCoinAmount(int InAmount);
-    void SetCurrentPoint(int PointText   );
+    void SetCurrentCoinAmount(int PointText   );
     void SetTargetCoinCount(int Count);
     void SetCurrentWaveIndex(int Value);
     void SetTotalWaveCount(int Value);

@@ -1,5 +1,7 @@
 ﻿#include "IngameWidget.h"
 #include "IngameState.h"
+#include "JUtility.h"
+
 #include <Components/TextBlock.h>
 #include <Components/ProgressBar.h>
 
@@ -19,8 +21,10 @@ void UIngameWidget::SetPoint(int InCurrentPoint, int InTargetPoint)
         , InTargetPoint
     );
 
-    PointText->SetText(TextToDisplay);
-    PointProgressbar->SetPercent((float)InCurrentPoint / (float)InTargetPoint);
+    JASSERT(!FMath::IsNearlyZero((float(InTargetPoint))), "Can not divide zero!");
+
+    CoinText->SetText(TextToDisplay);
+    CoinProgressbar->SetPercent((float)InCurrentPoint / (float)InTargetPoint);
 }
 void UIngameWidget::SetWaveText(int InCurrentWaveIndex, int InTotalWaveCount)
 {
