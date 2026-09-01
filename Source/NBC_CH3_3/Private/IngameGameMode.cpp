@@ -26,7 +26,7 @@ void AIngameGameMode::SetNextWave()
     JLog("%d 웨이브 시작!", CurrentWaveIndex + 1);
 
     IngameState->SetStartTime(GetWorld()->TimeSeconds);
-    IngameState->SetCurrentPoint(0);
+    IngameState->SetCurrentCoinAmount(0);
 }
 
 

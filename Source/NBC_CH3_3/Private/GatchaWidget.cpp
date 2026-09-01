@@ -21,7 +21,10 @@ void UGatchaWidget::NativeOnInitialized()
 
 void UGatchaWidget::HandleAnimationFinshed()
 {
-    AnimationFinishedCallback.Execute();
+    if (AnimationFinishedCallback.IsBound())
+    {
+        AnimationFinishedCallback.Execute();
+    }
 }
 
 void UGatchaWidget::PlayAnimation(FGatchaAnimationFinishedEvent Callback)

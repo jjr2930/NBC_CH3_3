@@ -27,10 +27,10 @@ protected:
     TObjectPtr<UTextBlock> TimeText;
 
     UPROPERTY(meta = (BindWidget))
-    TObjectPtr<UProgressBar> PointProgressbar;
+    TObjectPtr<UProgressBar> CoinProgressbar;
 
     UPROPERTY(meta = (BindWidget))
-    TObjectPtr<UTextBlock> PointText;
+    TObjectPtr<UTextBlock> CoinText;
 
     UPROPERTY(meta = (BindWidget))
     TObjectPtr<UTextBlock> WaveText;
