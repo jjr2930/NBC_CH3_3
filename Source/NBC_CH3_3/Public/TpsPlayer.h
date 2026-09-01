@@ -24,10 +24,12 @@ class NBC_CH3_3_API ATpsPlayer : public ACharacter
 public:
 	// Sets default values for this character's properties
 	ATpsPlayer();
+    virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+    
 
 public:	
 	virtual void Tick(float DeltaTime) override;
@@ -50,6 +52,9 @@ public:
     
     UFUNCTION()
     void OnGatchaAnimationFinished();
+
+    UFUNCTION()
+    void ClampIntStat(ECharacterStatType InStatType);
 protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "====TpsPlayer====|Components")
     TObjectPtr<UStatComponent> PlayerStat;

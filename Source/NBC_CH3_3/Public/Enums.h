@@ -14,7 +14,8 @@ UENUM(BlueprintType)
 enum class ECharacterStatType : uint8
 {
     Health      UMETA(DisplayName = "Health"),
-    MaxHealth   UMETA(DisplayName = "Max Health")
+    MaxHealth   UMETA(DisplayName = "Max Health"),
+    MovingSpeed UMETA(DisplayName = "Moving Speed"),
 };
 
 UENUM(BlueprintType)

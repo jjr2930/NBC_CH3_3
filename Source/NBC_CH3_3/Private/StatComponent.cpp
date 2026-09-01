@@ -21,7 +21,10 @@ void UStatComponent::SetOrInsert(ECharacterStatType InStatType, int InValue)
         , InValue);
 
     IntStats[InStatType] = InValue;
-  
+
+    if (IntStatClampCallback.IsBound())
+        IntStatClampCallback.Execute(InStatType);
+
     OnIntStatChangedCallbacks.Broadcast(InStatType, InValue);
 }
 
@@ -34,35 +37,76 @@ void UStatComponent::SetOrInsert(ECharacterStatType InStatType, float InValue)
 
     FloatStats[InStatType] = InValue;
 
+    if (FloatStatClampCallback.IsBound())
+        FloatStatClampCallback.Execute(InStatType);
+
     OnFloatStatChangedCallbacks.Broadcast(InStatType, InValue);
 }
 
-int UStatComponent::GetInt(ECharacterStatType StatType, int DefaultValue )
+void UStatComponent::SetOrInsertWithoutNotify(ECharacterStatType InStatType, int InValue)
 {
-    if (IntStats.Contains(StatType))
-    {
-        return *IntStats.Find(StatType);
-    }
+    JLog("%s, %s, Set to %d",
+        *GetOwner()->GetName()
+        , *StaticEnum<ECharacterStatType>()->GetNameStringByValue((int64)InStatType)
+        , InValue);
 
-    else
-    {
-        IntStats.Add(StatType, DefaultValue);
-        return DefaultValue;
-    }
+    IntStats[InStatType] = InValue;
 }
 
-float UStatComponent::GetFloat(ECharacterStatType StatType, float DefaultValue)
+void UStatComponent::SetOrInsertWithoutNotify(ECharacterStatType InStatType, float InValue)
 {
-    if (FloatStats.Contains(StatType))
+    JLog("%s, %s, Set to %f",
+        *GetOwner()->GetName()
+        , *StaticEnum<ECharacterStatType>()->GetNameStringByValue((int64)InStatType)
+        , InValue);
+
+    FloatStats[InStatType] = InValue;
+}
+
+int UStatComponent::GetInt(ECharacterStatType InStatType, int InDefaultValue )
+{
+    int BuffedStat = 0;
+    if (IntStats.Contains(InStatType))
     {
-        return *FloatStats.Find(StatType);
+        BuffedStat = *IntStats.Find(InStatType);
     }
 
     else
     {
-        FloatStats.Add(StatType, DefaultValue);
-        return DefaultValue;
+        IntStats.Add(InStatType, InDefaultValue);
+        BuffedStat = InDefaultValue;
     }
+
+    for (FBuff* Buff : Buffs)
+    {
+        Buff->GetBuffedStat(InStatType, &BuffedStat);
+    }
+
+    return BuffedStat;
+}
+
+float UStatComponent::GetFloat(ECharacterStatType InStatType, float DefaultValue)
+{
+    float BuffedStat = 0.0f;
+    if (FloatStats.Contains(InStatType))
+    {
+         BuffedStat = *FloatStats.Find(InStatType);
+    }
+
+    else
+    {
+        FloatStats.Add(InStatType, DefaultValue);
+        BuffedStat = DefaultValue;
+    }
+
+    //TODO: Duplicated code with Getint();
+
+    for (FBuff* Buff : Buffs)
+    {
+        Buff->GetBuffedStat(InStatType, &BuffedStat);
+    }
+
+    return BuffedStat;
 }
 
 bool UStatComponent::HasStat(ECharacterStatType InStatType, bool IsInt)
@@ -80,6 +124,8 @@ bool UStatComponent::HasStat(ECharacterStatType InStatType, bool IsInt)
 void UStatComponent::AddBuff(FBuff* Buff)
 {
     Buffs.Add(Buff);
+
+    JLog("Buff added");
 }
 
 UStatComponent::FOnIntStatChangedEvent* UStatComponent::GetIntCallbacks()
@@ -92,13 +138,21 @@ UStatComponent::FOnFloatStatChangedEvent* UStatComponent::GetFloatCallback()
     return &OnFloatStatChangedCallbacks;
 }
 
+UStatComponent::FIntStatClampCallback* UStatComponent::GetDelegateIntStatClamp()
+{
+    return &IntStatClampCallback;
+}
+
+UStatComponent::FFloatStatClampCallback* UStatComponent::GetDelegateFloatStatClamp()
+{
+    return &FloatStatClampCallback;
+}
+
 // Called when the game starts
 void UStatComponent::BeginPlay()
 {
 	Super::BeginPlay();
-
-	// ...
-	
+     
 }
 
 // Called every frame

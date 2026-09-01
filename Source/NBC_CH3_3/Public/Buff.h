@@ -17,9 +17,13 @@ public:
         , IsIntValue(InIsIntValue)
         , IntValue(InIntValue)
         , FloatValue(InFloatValue)
+        , bPendingRemoval(false)
     {
     }
-    virtual ~FBuff() = default;
+    virtual ~FBuff()
+    {
+        //JLog("Destroy Buff");
+    }
     
     bool GetPendingRemoval()
     {
@@ -47,7 +51,11 @@ public:
     {
     }
 
-    virtual ~FInstantBuff() = default;
+    virtual ~FInstantBuff() 
+    {
+        JLog("Destory Instant buff");
+    }
+
 
     virtual void Tick(UStatComponent* StatComponent) override
     {
@@ -73,7 +81,6 @@ public:
         int CurrentValue = StatComponent->GetInt(TargetStat);
         switch (Operator)
         {
-
             case EStatOperatorType::Add:
                 CurrentValue += IntValue;
                 break;
@@ -148,7 +155,11 @@ public:
     {
     }
 
-    virtual ~FDurationBuff() = default;
+    virtual ~FDurationBuff()
+    {
+        JLog("Destroy Duration buff");
+    }
+
 
     virtual void Tick(UStatComponent* StatComponent) override
     {

@@ -7,6 +7,7 @@
 #include "Engine/DataTable.h"
 #include "DurationBuffTableRow.generated.h"
 
+class UStatComponent;
 
 USTRUCT(BlueprintType)
 struct NBC_CH3_3_API FDurationBuffTableRow : public FBuffTableRowBase
@@ -17,12 +18,8 @@ public:
     FDurationBuffTableRow();
 	~FDurationBuffTableRow();
 
-    virtual FBuff* ToBuff() override;
-
 public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "=== BUFF ===")
     float Duration;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "=== BUFF ===")
-    float StartTime;
 };

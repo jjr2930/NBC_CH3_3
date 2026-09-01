@@ -11,7 +11,6 @@ struct NBC_CH3_3_API FInstantBuffTableRow : public FBuffTableRowBase
 {
     GENERATED_BODY();
 
-    virtual FBuff* ToBuff() override;
 public:
 	FInstantBuffTableRow();
 	~FInstantBuffTableRow();

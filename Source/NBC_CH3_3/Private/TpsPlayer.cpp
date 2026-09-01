@@ -16,11 +16,13 @@
 #include "InstantBuffTableRow.h"
 #include "QuestItemTableRow.h"
 #include "ConsumeItemTableRow.h"
+#include "BuffFactory.h"
 
 #include "Components/CapsuleComponent.h"
 #include <Camera/CameraComponent.h>
 #include <Blueprint/UserWidget.h>
 #include <Kismet/GameplayStatics.h>
+#include <GameFramework/CharacterMovementComponent.h>
 
 ATpsPlayer::ATpsPlayer()
     : GatchaWidgetInstance(nullptr)
@@ -38,11 +40,20 @@ ATpsPlayer::ATpsPlayer()
 	PrimaryActorTick.bCanEverTick = true;
 }
 
+void ATpsPlayer::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+    PlayerStat->GetDelegateIntStatClamp()->Unbind();
+
+    Super::EndPlay(EndPlayReason);
+}
+
 void ATpsPlayer::BeginPlay()
 {
 	Super::BeginPlay();
 
-    checkf(IsValid(GatchaWidget), TEXT("GatchaWidget is invalid"));
+    JASSERT(IsValid(GatchaWidget), "GatchaWidget is invalid");
+
+    PlayerStat->GetDelegateIntStatClamp()->BindUObject(this, &ATpsPlayer::ClampIntStat);
 
     GatchaWidgetInstance = CreateWidget<UGatchaWidget>(GetWorld(), GatchaWidget);
     GatchaWidgetInstance->AddToViewport(1);
@@ -53,7 +64,13 @@ void ATpsPlayer::BeginPlay()
 void ATpsPlayer::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+    //TODO: Tick에서 하지 않는 더 좋은 방법을 찾아보자.
 
+    JASSERT(PlayerStat->HasStat(ECharacterStatType::MovingSpeed, false), "There is not Moving Speed Stat");
+    
+    float BuffedMovingSpeed = PlayerStat->GetFloat(ECharacterStatType::MovingSpeed);
+
+    GetCharacterMovement()->MaxWalkSpeed = BuffedMovingSpeed;
 }
 
 void ATpsPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -170,27 +187,55 @@ void ATpsPlayer::OnGatchaAnimationFinished()
 
         JASSERT((nullptr != ConsumeItemRow), "Itemr ow is not consumeitem row");
 
+        FBuff* NewBuff = nullptr;
+        FBuffTableRowBase* BuffTableRow = nullptr;
         switch (ConsumeItemRow->BuffType)
         {
         case EBuffType::Duration:
         {
-            FDurationBuffTableRow* DurationBuffRow = DurationBuffTable->FindRow<FDurationBuffTableRow>(ConsumeItemRow->BuffRowName, TEXT("TpsPlayer"));
-            PlayerStat->AddBuff(DurationBuffRow->ToBuff());
+            //TODO BuffBank 라는 테이블들에서 검색해서 찾아주는 클래스를 만들면 좀 더 추상화 할 수 있다.
+            BuffTableRow = static_cast<FBuffTableRowBase*>(DurationBuffTable->FindRow<FDurationBuffTableRow>(ConsumeItemRow->BuffRowName, TEXT("TpsPlayer")));
+
+            NewBuff = FBuffFactory::CreateBuff(GetWorld(), ConsumeItemRow->BuffType, BuffTableRow);
             break;
         }
 
         case EBuffType::Instant:
         {
-            FInstantBuffTableRow* InstnatBuffRow = InstantBuffTable->FindRow<FInstantBuffTableRow>(ConsumeItemRow->BuffRowName, TEXT("TpsPlayer"));
+            BuffTableRow = static_cast<FInstantBuffTableRow*>(InstantBuffTable->FindRow<FInstantBuffTableRow>(ConsumeItemRow->BuffRowName, TEXT("TpsPlayer")));
 
-            FBuff* Buff = InstnatBuffRow->ToBuff();
-            PlayerStat->AddBuff(Buff);
+            NewBuff = FBuffFactory::CreateBuff(GetWorld(), ConsumeItemRow->BuffType, BuffTableRow);
             break;
         }
         }
+
+        PlayerStat->AddBuff(NewBuff);
         break;
     }
 
+    default:
+        break;
+    }
+}
+
+void ATpsPlayer::ClampIntStat(ECharacterStatType InStatType)
+{
+    JASSERT(PlayerStat->HasStat(InStatType, true)
+        , "%s stat not exist"
+        , *GET_ENUM_STRING(ECharacterStatType, InStatType));
+
+    switch (InStatType)
+    {
+    case ECharacterStatType::Health:
+    {
+        int CurrentHealth = PlayerStat->GetInt(ECharacterStatType::Health);
+        int MaxHealth = PlayerStat->GetInt(ECharacterStatType::MaxHealth);
+        if (CurrentHealth > MaxHealth)
+            CurrentHealth = MaxHealth;
+        
+        PlayerStat->SetOrInsertWithoutNotify(ECharacterStatType::Health, CurrentHealth);
+        break;
+    }
     default:
         break;
     }

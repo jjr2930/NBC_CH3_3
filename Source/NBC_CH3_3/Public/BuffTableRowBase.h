@@ -17,7 +17,6 @@ public:
     FBuffTableRowBase();
 	~FBuffTableRowBase();
 
-    virtual FBuff* ToBuff() PURE_VIRTUAL(FBuff::ToBuff, return nullptr; );
 public:
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "=== BUFF ===")
