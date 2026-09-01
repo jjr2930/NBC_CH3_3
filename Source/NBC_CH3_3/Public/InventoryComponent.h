@@ -31,6 +31,7 @@ public:
     void AddItem(EItemType InItemType, FName& InTableKey, int amount);
     void RemoveItem(EItemType InItemType, FName& InTableKey, int amount);
     bool TryGetItem(EItemType InItemType, FName& TableKey, int* OutFound);
+    void Clear();
 
 protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")

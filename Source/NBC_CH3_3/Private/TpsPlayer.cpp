@@ -17,6 +17,7 @@
 #include "QuestItemTableRow.h"
 #include "ConsumeItemTableRow.h"
 #include "BuffFactory.h"
+#include "IngameState.h"
 
 #include "Components/CapsuleComponent.h"
 #include <Camera/CameraComponent.h>
@@ -54,11 +55,18 @@ void ATpsPlayer::BeginPlay()
     JASSERT(IsValid(GatchaWidget), "GatchaWidget is invalid");
 
     PlayerStat->GetDelegateIntStatClamp()->BindUObject(this, &ATpsPlayer::ClampIntStat);
+    PlayerStat->GetIntCallbacks()->AddUObject(this, &ATpsPlayer::OnStatChanged);
+
+    TObjectPtr<AIngameState> IngameState
+        = Cast<AIngameState>(GetWorld()->GetGameState());
+
+    JASSERT(IsValid(IngameState), "Current state is not IngameState");
+
+    IngameState->OnWaveIndexChanged.AddUObject(this, &ATpsPlayer::OnWaveIndexChanged);
 
     GatchaWidgetInstance = CreateWidget<UGatchaWidget>(GetWorld(), GatchaWidget);
     GatchaWidgetInstance->AddToViewport(1);
     GatchaWidgetInstance->SetVisibility(ESlateVisibility::Hidden);
-
 }
 
 void ATpsPlayer::Tick(float DeltaTime)
@@ -230,13 +238,41 @@ void ATpsPlayer::ClampIntStat(ECharacterStatType InStatType)
     {
         int CurrentHealth = PlayerStat->GetInt(ECharacterStatType::Health);
         int MaxHealth = PlayerStat->GetInt(ECharacterStatType::MaxHealth);
+
         if (CurrentHealth > MaxHealth)
             CurrentHealth = MaxHealth;
-        
+        else if (CurrentHealth <= 0)
+            CurrentHealth = 0;
+
         PlayerStat->SetOrInsertWithoutNotify(ECharacterStatType::Health, CurrentHealth);
         break;
     }
     default:
         break;
     }
+}
+
+void ATpsPlayer::OnStatChanged(ECharacterStatType InStatType, int InValue)
+{
+    switch (InStatType)
+    {
+    case ECharacterStatType::Health:
+    {
+        if (InValue <= 0)
+        {
+            AIngameGameMode* IngameGameMode = Cast<AIngameGameMode>(GetWorld()->GetAuthGameMode());
+            JASSERT(IsValid(IngameGameMode), "Current Game mode is not ingamegamemode");
+
+            IngameGameMode->OnPlayerDead();
+        }
+        break;
+    }
+    default:
+        break;
+    }
+}
+
+void ATpsPlayer::OnWaveIndexChanged(int CurrentWaveIndex, int TotalWaveCount)
+{
+    Inventory->Clear
 }

@@ -16,7 +16,17 @@ FVector ASpawnVolume::GetRandomPositionInVolume()
     FVector RandomPointInBox = FMath::RandPointInBox(LocaBox);
     FVector RandomWorldPosition = BoxVolume->GetComponentTransform().TransformPosition(RandomPointInBox);
 
-    return RandomWorldPosition;
+    FHitResult HitResult;
+    FVector Start = RandomWorldPosition + FVector::UpVector * 100.0f;
+    FVector End = RandomWorldPosition + FVector::UpVector * -1000.0f;
+    if (GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, ECollisionChannel::ECC_WorldStatic))
+    {
+        return HitResult.ImpactPoint;
+    }
+    else
+    {
+        return RandomWorldPosition;
+    }
 }
 
 void ASpawnVolume::BeginPlay()

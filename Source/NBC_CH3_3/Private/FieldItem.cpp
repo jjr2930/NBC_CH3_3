@@ -72,3 +72,8 @@ FFieldItemSpawnRow* AFieldItem::Roll() const
 
     return FoundRow;
 }
+
+FVector AFieldItem::GetStaticMeshWorldSize()
+{
+    return StaticMesh->GetStaticMesh()->GetBounds().GetBox().GetSize();
+}

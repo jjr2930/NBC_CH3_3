@@ -30,11 +30,17 @@ public:
         return bPendingRemoval;
     }
 
+    EBuffType GetBuffType() const
+    {
+        return BuffType;
+    }
+
     virtual void Tick(UStatComponent* StatComponent) = 0;
     virtual void GetBuffedStat(ECharacterStatType InStatType, int* OutStat) {}
     virtual void GetBuffedStat(ECharacterStatType InStatType, float* OutStat) {}
 
 protected:
+    EBuffType BuffType;
     ECharacterStatType TargetStat;
     EStatOperatorType Operator;
     bool IsIntValue;
@@ -49,13 +55,13 @@ public:
     FInstantBuff(ECharacterStatType InTargetStat, EStatOperatorType InOperator, bool InIsIntValue, int InIntValue, float InFloatValue)
         : FBuff(InTargetStat, InOperator, InIsIntValue, InIntValue, InFloatValue)
     {
+        BuffType = EBuffType::Instant;
     }
 
     virtual ~FInstantBuff() 
     {
-        JLog("Destory Instant buff");
+        //JLog("Destory Instant buff");
     }
-
 
     virtual void Tick(UStatComponent* StatComponent) override
     {
@@ -148,16 +154,16 @@ public:
 class NBC_CH3_3_API FDurationBuff : public FBuff
 {
 public:
-    FDurationBuff(ECharacterStatType InTargetType, EStatOperatorType InOperator, bool InIsIntValue, int InIntValue, float InFloatValue, float InDuration, float InStartTime)
+    FDurationBuff(ECharacterStatType InTargetType, EStatOperatorType InOperator, bool InIsIntValue, int InIntValue, float InFloatValue, float InDuration, float InStartTime, TObjectPtr<UTexture2D> InIconTexture)
         : FBuff(InTargetType, InOperator, InIsIntValue, InIntValue, InFloatValue)
-        , Duration(InDuration)
-        , StartTime(InStartTime)
+        , Duration(InDuration), StartTime(InStartTime), IconTexture(InIconTexture)
     {
+        BuffType = EBuffType::Duration;
     }
 
     virtual ~FDurationBuff()
     {
-        JLog("Destroy Duration buff");
+        //JLog("Destroy Duration buff");
     }
 
 
@@ -238,7 +244,24 @@ public:
         }
     }
 
+    float GetDuration()
+    {
+        return Duration;
+    }
+
+    float GetStartTime()
+    {
+        return StartTime;
+    }
+
+    TObjectPtr<UTexture2D> GetIconTexture()
+    {
+        return IconTexture;
+    }
+
 protected:
     float Duration;
     float StartTime;
+
+    TObjectPtr<UTexture2D> IconTexture;
 };

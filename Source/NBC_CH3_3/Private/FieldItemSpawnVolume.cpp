@@ -43,8 +43,12 @@ AActor* AFieldItemSpawnVolume::Spawn()
     }
 
     checkf(IsValid(FieldItem), TEXT("Field Item is nullptr"));
+     
+    TObjectPtr<AFieldItem> CastedFieldItem = Cast<AFieldItem>(FieldItem->GetDefaultObject());
+    float Z_Size = (float) CastedFieldItem->GetStaticMeshWorldSize().Z;
     
-    FVector RandomPosition = GetRandomPositionInVolume();
+    FVector RandomPosition = GetRandomPositionInVolume() ;
+    RandomPosition.Z += Z_Size * 0.5f;
     FRotator SpawnRotator(0.0, 0.0, 0.0);
     FTransform SpawnTransform(SpawnRotator, RandomPosition, FVector::One());
     AFieldItem* SpawnedActor 

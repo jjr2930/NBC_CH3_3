@@ -126,6 +126,8 @@ void UStatComponent::AddBuff(FBuff* Buff)
     Buffs.Add(Buff);
 
     JLog("Buff added");
+
+    BuffAddedCallbacks.Broadcast(Buff);
 }
 
 UStatComponent::FOnIntStatChangedEvent* UStatComponent::GetIntCallbacks()
@@ -148,6 +150,21 @@ UStatComponent::FFloatStatClampCallback* UStatComponent::GetDelegateFloatStatCla
     return &FloatStatClampCallback;
 }
 
+UStatComponent::FOnBuffAddedEvent* UStatComponent::GetDelegateBuffAdded()
+{
+    return &BuffAddedCallbacks;
+}
+
+UStatComponent::FOnBuffRemovedEvent* UStatComponent::GetDelegateBuffRemoved()
+{
+    return &BuffRemovedCallbacks;
+}
+
+const TArray<FBuff*>* UStatComponent::GetBuffs()
+{
+    return &Buffs;
+}
+
 // Called when the game starts
 void UStatComponent::BeginPlay()
 {
@@ -166,8 +183,10 @@ void UStatComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
         Buffs[i]->Tick(this);
         if (Buffs[i]->GetPendingRemoval())
         {
-            delete Buffs[i];
+            FBuff* Old = Buffs[i];
             Buffs.RemoveAt(i);
+            BuffRemovedCallbacks.Broadcast(Old); 
+            delete Old;
         }
     }
 }

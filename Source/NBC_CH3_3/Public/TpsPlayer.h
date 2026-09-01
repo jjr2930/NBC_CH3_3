@@ -55,6 +55,12 @@ public:
 
     UFUNCTION()
     void ClampIntStat(ECharacterStatType InStatType);
+
+    UFUNCTION()
+    void OnStatChanged(ECharacterStatType InStatType, int InValue);
+
+    UFUNCTION()
+    void OnWaveIndexChanged(int CurrentWaveIndex, int TotalWaveCount);
 protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "====TpsPlayer====|Components")
     TObjectPtr<UStatComponent> PlayerStat;

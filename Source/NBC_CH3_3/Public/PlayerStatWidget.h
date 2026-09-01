@@ -5,11 +5,16 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "StatComponent.h"
+#include "Buff.h"
 #include "PlayerStatWidget.generated.h"
 
 class UProgressBar;
 class UTextBlock;
 class UStatComponent;
+class UVerticalBox;
+class UScrollBox;
+class UBuffProgressBar;
+
 
 UCLASS()
 class NBC_CH3_3_API UPlayerStatWidget : public UUserWidget
@@ -21,6 +26,9 @@ public:
     UFUNCTION()
     void OnStatChanged(ECharacterStatType InStatType, int Value);
 
+    void OnBuffAdded(FBuff* NewBuff);
+    void OnBuffRemoved(FBuff* OldBuff);
+
 protected: 
     void RefreshHealthUi();
 protected:
@@ -30,5 +38,16 @@ protected:
     UPROPERTY(meta = (BindWidget))
     TObjectPtr<UTextBlock> HealthProgressBarText;
 
+    UPROPERTY(meta = (BindWidget))
+    TObjectPtr<UScrollBox> BuffScrollBox;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "=== Player State Widget ===|References")
+    TSubclassOf<UBuffProgressBar> BuffProbressBarClass;
+
+    UPROPERTY()
+    TArray<UBuffProgressBar*> CreatedBuffProgressbars;
+
+    UPROPERTY() 
     TObjectPtr<UStatComponent> TargetStatComponent;
+
 };

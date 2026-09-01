@@ -1,8 +1,11 @@
 ﻿#include "PlayerStatWidget.h"
 #include "StatComponent.h"
+#include "BuffProgressBar.h"
+#include "Buff.h"
 
 #include <Components/ProgressBar.h>
 #include <Components/TextBlock.h>
+#include <Components/ScrollBox.h>
 
 void UPlayerStatWidget::SetStatComponent(TObjectPtr<UStatComponent> InStatComponent)
 {
@@ -11,6 +14,14 @@ void UPlayerStatWidget::SetStatComponent(TObjectPtr<UStatComponent> InStatCompon
     TargetStatComponent
         ->GetIntCallbacks()
         ->AddUObject(this, &UPlayerStatWidget::OnStatChanged);
+
+    TargetStatComponent
+        ->GetDelegateBuffAdded()
+        ->AddUObject(this, &UPlayerStatWidget::OnBuffAdded);
+
+    TargetStatComponent
+        ->GetDelegateBuffRemoved()
+        ->AddUObject(this, &UPlayerStatWidget::OnBuffRemoved);
 
     RefreshHealthUi();
 }
@@ -34,6 +45,41 @@ void UPlayerStatWidget::OnStatChanged(ECharacterStatType InStatType, int Value)
 
     default:
         break;
+    }
+}
+
+void UPlayerStatWidget::OnBuffAdded(FBuff* NewBuff)
+{
+    if (NewBuff->GetBuffType() != EBuffType::Duration)
+        return;
+
+    FDurationBuff* DurationBuff = static_cast<FDurationBuff*>(NewBuff);
+
+    UBuffProgressBar* NewBuffProgressBar = CreateWidget<UBuffProgressBar>(this, BuffProbressBarClass);
+    NewBuffProgressBar->BindBuff(DurationBuff);
+    CreatedBuffProgressbars.Emplace(NewBuffProgressBar);
+
+    BuffScrollBox->AddChild(NewBuffProgressBar);
+}
+
+void UPlayerStatWidget::OnBuffRemoved(FBuff* OldBuff)
+{
+    if (OldBuff->GetBuffType() != EBuffType::Duration)
+        return;
+
+    FDurationBuff* DurationBuff = static_cast<FDurationBuff*>(OldBuff);
+    int Count = CreatedBuffProgressbars.Num();
+    for (int i = Count - 1; i >= 0; --i)
+    {
+        UBuffProgressBar* ProgressBar = CreatedBuffProgressbars[i];
+        if (ProgressBar->IsMyBuff(DurationBuff))
+        {
+            CreatedBuffProgressbars.RemoveAt(i);
+            ProgressBar->RemoveFromParent();
+            
+            JLog("Buff Progress bar removed");
+            break;
+        }
     }
 }
 

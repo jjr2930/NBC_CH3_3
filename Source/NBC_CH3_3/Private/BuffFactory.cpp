@@ -21,24 +21,25 @@ FBuff* FBuffFactory::CreateBuff(UWorld* InWorld, const EBuffType BuffType, const
     {
     case EBuffType::Duration:
     {
-        const FDurationBuffTableRow* DurationBuffTable = static_cast<const FDurationBuffTableRow*>(BuffData);
-        return  new FDurationBuff(DurationBuffTable->TargetStat
-            , DurationBuffTable->Operator
-            , DurationBuffTable->IsIntValue
-            , DurationBuffTable->IntValue
-            , DurationBuffTable->FloatValue
-            , DurationBuffTable->Duration
-            , InWorld->TimeSeconds);
+        const FDurationBuffTableRow* DurationBuffTableRow = static_cast<const FDurationBuffTableRow*>(BuffData);
+        return  new FDurationBuff(DurationBuffTableRow->TargetStat
+            , DurationBuffTableRow->Operator
+            , DurationBuffTableRow->IsIntValue
+            , DurationBuffTableRow->IntValue
+            , DurationBuffTableRow->FloatValue
+            , DurationBuffTableRow->Duration
+            , InWorld->TimeSeconds
+            , DurationBuffTableRow->IconTexture);
     }
 
     case EBuffType::Instant:
     {
-        const FInstantBuffTableRow* InstantBuffTable = static_cast<const FInstantBuffTableRow*>(BuffData);
-        return new FInstantBuff(InstantBuffTable->TargetStat
-            , InstantBuffTable->Operator
-            , InstantBuffTable->IsIntValue
-            , InstantBuffTable->IntValue
-            , InstantBuffTable->FloatValue);
+        const FInstantBuffTableRow* InstantBuffTableRow = static_cast<const FInstantBuffTableRow*>(BuffData);
+        return new FInstantBuff(InstantBuffTableRow->TargetStat
+            , InstantBuffTableRow->Operator
+            , InstantBuffTableRow->IsIntValue
+            , InstantBuffTableRow->IntValue
+            , InstantBuffTableRow->FloatValue);
     }
     default:
         JASSERT_NULLPTR(false

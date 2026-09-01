@@ -84,3 +84,8 @@ bool UInventoryComponent::TryGetItem(EItemType InItemType, FName& TableKey, int*
 }
 
 
+void UInventoryComponent::Clear()
+{
+    int32 Size = Items.Num();
+    Items.Empty();
+}

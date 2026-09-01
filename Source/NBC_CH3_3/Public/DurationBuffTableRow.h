@@ -22,4 +22,7 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "=== BUFF ===")
     float Duration;
 
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "=== BUFF ===")
+    TObjectPtr<UTexture2D> IconTexture;
+
 };

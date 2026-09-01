@@ -18,6 +18,9 @@ public:
     DECLARE_DELEGATE_OneParam(FIntStatClampCallback, ECharacterStatType);
     DECLARE_DELEGATE_OneParam(FFloatStatClampCallback, ECharacterStatType);
 
+    DECLARE_MULTICAST_DELEGATE_OneParam(FOnBuffAddedEvent, FBuff*);
+    DECLARE_MULTICAST_DELEGATE_OneParam(FOnBuffRemovedEvent, FBuff*);
+
     DECLARE_MULTICAST_DELEGATE_TwoParams(FOnIntStatChangedEvent, ECharacterStatType, int);
     DECLARE_MULTICAST_DELEGATE_TwoParams(FOnFloatStatChangedEvent, ECharacterStatType, float);
 
@@ -60,6 +63,10 @@ public:
     FOnFloatStatChangedEvent* GetFloatCallback();
     FIntStatClampCallback* GetDelegateIntStatClamp();
     FFloatStatClampCallback* GetDelegateFloatStatClamp();
+    FOnBuffAddedEvent* GetDelegateBuffAdded();
+    FOnBuffRemovedEvent* GetDelegateBuffRemoved();
+
+    const TArray<FBuff*>* GetBuffs();
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
@@ -80,4 +87,7 @@ protected:
     FOnFloatStatChangedEvent OnFloatStatChangedCallbacks;
     FIntStatClampCallback IntStatClampCallback;
     FFloatStatClampCallback FloatStatClampCallback;
+
+    FOnBuffAddedEvent BuffAddedCallbacks;
+    FOnBuffRemovedEvent BuffRemovedCallbacks;
 };

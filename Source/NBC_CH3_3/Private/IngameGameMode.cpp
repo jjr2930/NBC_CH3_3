@@ -45,6 +45,19 @@ void AIngameGameMode::OnItemAdded(const FInventoryItemData& AddedItem)
     }
 }
 
+void AIngameGameMode::OnPlayerDead()
+{
+    JLog("Player Has Dead");
+    LoadFailedLevel();
+}
+
+void AIngameGameMode::LoadFailedLevel()
+{
+    JASSERT(!FailedLevel.IsNull(), "Failed level is invalid");
+    UGameplayStatics::OpenLevelBySoftObjectPtr(GetWorld(), FailedLevel);
+
+}
+
 void AIngameGameMode::BeginPlay()
 {
     IngameState = Cast<AIngameState>(GetWorld()->GetGameState());
@@ -67,7 +80,6 @@ void AIngameGameMode::Tick(float DeltaTime)
     {
         JLog("Time Over");
 
-        checkf(!FailedLevel.IsNull(), TEXT("Failed level is invalid"));
-        UGameplayStatics::OpenLevelBySoftObjectPtr(GetWorld(), FailedLevel);
+        LoadFailedLevel();
     }
 }

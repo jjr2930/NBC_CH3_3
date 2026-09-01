@@ -19,7 +19,8 @@ public:
     /*void PickupFieldItem(AFieldItem& item, AActor& Who, EItemType* ItemType, int* Amount);*/
     void SetNextWave();
     void OnItemAdded(const FInventoryItemData& AddedItem);
-
+    void OnPlayerDead();
+    void LoadFailedLevel();
     virtual void BeginPlay() override;
     virtual void Tick(float DeltaTime) override;
 
