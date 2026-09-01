@@ -8,13 +8,6 @@ void AIngameState::SetCurrentCoinAmount(int InAmount)
     OnCoinCountChanged.Broadcast(CurrentCoinCount, TargetCoinCount);
 }
 
-void AIngameState::SetCurrentCoinAmount(int InValue)
-{
-    this->CurrentCoinCount = InValue;
-
-    OnCoinCountChanged.Broadcast(CurrentCoinCount, TargetCoinCount);
-}
-
 void AIngameState::SetTargetCoinCount(int InValue)
 {
     TargetCoinCount = InValue;
