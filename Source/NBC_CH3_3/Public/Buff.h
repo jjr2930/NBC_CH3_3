@@ -137,13 +137,15 @@ public:
 
             case EStatOperatorType::Divide:
             {
-                if (FMath::IsNearlyZero(FloatValue) == 0)
+                if (FMath::IsNearlyZero(FloatValue))
                     throw std::runtime_error("Can not divde by zero");
 
-                CurrentValue /= IntValue;
+                CurrentValue /= FloatValue;
                 break;
             }
         }
+
+        StatComponent->SetOrInsert(TargetStat, FloatValue);
     }
 
     //nothing to do 

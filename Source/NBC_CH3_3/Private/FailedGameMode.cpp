@@ -1,6 +1,4 @@
-
-
-
+﻿
 #include "FailedGameMode.h"
 
 

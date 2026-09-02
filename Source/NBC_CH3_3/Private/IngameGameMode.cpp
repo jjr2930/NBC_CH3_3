@@ -14,6 +14,7 @@
 
 AIngameGameMode::AIngameGameMode()
     : IngameState(nullptr)
+    , bIsTransitioning(false)
 {
     GameStateClass = AIngameState::StaticClass();
 
@@ -71,6 +72,8 @@ void AIngameGameMode::LoadFailedLevel()
 
 void AIngameGameMode::BeginPlay()
 {
+    bIsTransitioning = false;
+
     IngameState = Cast<AIngameState>(GetWorld()->GetGameState());
     checkf(IsValid(IngameState), TEXT("Current game state is not IngameState"));
 
@@ -89,8 +92,10 @@ void AIngameGameMode::Tick(float DeltaTime)
 
     IngameState->SetRemainTime(RemainTime);
 
-    if (RemainTime <= 0.0f)
+    if (RemainTime <= 0.0f && !bIsTransitioning )
     {
+        bIsTransitioning = true;
+        
         JLog("Time Over");
 
         LoadFailedLevel();

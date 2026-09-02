@@ -32,4 +32,6 @@ protected:
     TSoftObjectPtr<UWorld> FailedLevel;
     
     AIngameState* IngameState;
+
+    bool bIsTransitioning;
 };
