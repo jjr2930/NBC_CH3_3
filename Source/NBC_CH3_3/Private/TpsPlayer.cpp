@@ -274,5 +274,5 @@ void ATpsPlayer::OnStatChanged(ECharacterStatType InStatType, int InValue)
 
 void ATpsPlayer::OnWaveIndexChanged(int CurrentWaveIndex, int TotalWaveCount)
 {
-    Inventory->Clear
+    Inventory->Clear();
 }

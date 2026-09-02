@@ -1,6 +1,6 @@
 ﻿#include "IngameGameInstance.h"
 
-void UIngameGameInstance::AddScore(int InAmount)
+void UIngameGameInstance::AddSeconds(float InAmount)
 {
     Score += InAmount;
 }
@@ -10,7 +10,7 @@ void UIngameGameInstance::ClearScore()
     Score = 0;
 }
 
-int UIngameGameInstance::GetScore()
+float UIngameGameInstance::GetScore()
 {
     return Score;
 }

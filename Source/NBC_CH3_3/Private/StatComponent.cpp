@@ -15,10 +15,10 @@ UStatComponent::UStatComponent()
 
 void UStatComponent::SetOrInsert(ECharacterStatType InStatType, int InValue)
 {
-    JLog("%s, %s, Set to %d",
+    /*JLog("%s, %s, Set to %d",
         *GetOwner()->GetName()
         , *StaticEnum<ECharacterStatType>()->GetNameStringByValue((int64)InStatType)
-        , InValue);
+        , InValue);*/
 
     IntStats[InStatType] = InValue;
 
@@ -30,10 +30,10 @@ void UStatComponent::SetOrInsert(ECharacterStatType InStatType, int InValue)
 
 void UStatComponent::SetOrInsert(ECharacterStatType InStatType, float InValue)
 {
-    JLog("%s, %s, Set to %f",
+  /*  JLog("%s, %s, Set to %f",
         *GetOwner()->GetName()
         , *StaticEnum<ECharacterStatType>()->GetNameStringByValue((int64)InStatType)
-        , InValue);
+        , InValue);*/
 
     FloatStats[InStatType] = InValue;
 
@@ -45,20 +45,20 @@ void UStatComponent::SetOrInsert(ECharacterStatType InStatType, float InValue)
 
 void UStatComponent::SetOrInsertWithoutNotify(ECharacterStatType InStatType, int InValue)
 {
-    JLog("%s, %s, Set to %d",
+    /*JLog("%s, %s, Set to %d Without Notify" ,
         *GetOwner()->GetName()
         , *StaticEnum<ECharacterStatType>()->GetNameStringByValue((int64)InStatType)
-        , InValue);
+        , InValue);*/
 
     IntStats[InStatType] = InValue;
 }
 
 void UStatComponent::SetOrInsertWithoutNotify(ECharacterStatType InStatType, float InValue)
 {
-    JLog("%s, %s, Set to %f",
+    /*JLog("%s, %s, Set to %f Without Notify",
         *GetOwner()->GetName()
         , *StaticEnum<ECharacterStatType>()->GetNameStringByValue((int64)InStatType)
-        , InValue);
+        , InValue);*/
 
     FloatStats[InStatType] = InValue;
 }
@@ -125,7 +125,7 @@ void UStatComponent::AddBuff(FBuff* Buff)
 {
     Buffs.Add(Buff);
 
-    JLog("Buff added");
+    //JLog("Buff added");
 
     BuffAddedCallbacks.Broadcast(Buff);
 }

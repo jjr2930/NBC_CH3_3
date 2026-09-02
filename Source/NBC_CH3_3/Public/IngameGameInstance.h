@@ -10,11 +10,13 @@ class NBC_CH3_3_API UIngameGameInstance : public UGameInstance
 	GENERATED_BODY()
 
 public:
-    void AddScore(int InAmount);
+    void AddSeconds(float InAmount);
+    UFUNCTION(BlueprintCallable)
     void ClearScore();
 
-    int GetScore();
+    UFUNCTION(BlueprintCallable)
+    float GetScore();
 
 protected:
-    int Score;
+    float Score;
 };

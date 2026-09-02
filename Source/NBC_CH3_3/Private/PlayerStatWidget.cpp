@@ -77,7 +77,7 @@ void UPlayerStatWidget::OnBuffRemoved(FBuff* OldBuff)
             CreatedBuffProgressbars.RemoveAt(i);
             ProgressBar->RemoveFromParent();
             
-            JLog("Buff Progress bar removed");
+            //JLog("Buff Progress bar removed");
             break;
         }
     }

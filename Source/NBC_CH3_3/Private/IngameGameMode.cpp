@@ -2,13 +2,15 @@
 #include "IngameGameMode.h"
 #include "JUtility.h"
 #include "FieldItem.h"
-#include "Kismet/GameplayStatics.h"
 #include "IngameState.h"
 #include "StatComponent.h"
 #include "IngameGameInstance.h"
 #include "InventoryComponent.h"
 #include "Enums.h"
 #include "FieldItemSpawnRow.h"
+#include "IngameGameInstance.h"
+
+#include <Kismet/GameplayStatics.h>
 
 AIngameGameMode::AIngameGameMode()
     : IngameState(nullptr)
@@ -40,7 +42,17 @@ void AIngameGameMode::OnItemAdded(const FInventoryItemData& AddedItem)
             int CurrentWaveIndex = IngameState->GetCurrentWaveIndex();
             JLog("%d 웨이브 완료", CurrentWaveIndex + 1);
 
-            SetNextWave();
+            if (IngameState->GetTotalWaveCount() == CurrentWaveIndex + 1)
+            {
+                JASSERT(!NextStage.IsNull(), "Next level is invalid");
+                JLog("스테이지 클리어, 다음 레벨 %s 열기", *NextStage.GetAssetName());
+                
+                UGameplayStatics::OpenLevelBySoftObjectPtr(GetWorld(), NextStage);
+            }
+            else
+            {
+                SetNextWave();
+            }
         }
     }
 }
@@ -55,7 +67,6 @@ void AIngameGameMode::LoadFailedLevel()
 {
     JASSERT(!FailedLevel.IsNull(), "Failed level is invalid");
     UGameplayStatics::OpenLevelBySoftObjectPtr(GetWorld(), FailedLevel);
-
 }
 
 void AIngameGameMode::BeginPlay()
@@ -69,6 +80,8 @@ void AIngameGameMode::BeginPlay()
 
 void AIngameGameMode::Tick(float DeltaTime)
 {
+    GetGameInstance<UIngameGameInstance>()->AddSeconds(DeltaTime);
+
     float StartTime = IngameState->GetStartTime();
     float NowTime = (float)GetWorld()->TimeSeconds;
     float WaveDuration = IngameState->GetWaveDuration();
